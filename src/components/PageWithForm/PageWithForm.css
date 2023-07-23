@@ -1,0 +1,43 @@
+.page-with-form {
+  padding: calc(3000vw / 320);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.page-with-form__logo {
+  width: 38px;
+  height: 38px;
+  margin-bottom: 50px;
+}
+.page-with-form__offer {
+  display: grid;
+  grid-template-columns: auto auto;
+  column-gap: 7px;
+  color: #a0a0a0;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: normal;
+}
+.page-with-form__question {
+  margin: 0;
+  padding: 0;
+}
+
+@media screen and (min-width: 768px) {
+  .page-with-form {
+    padding: 232px calc(18600vw / 768);
+    align-items: start;
+    min-width: 396px;
+  }
+
+  .page-with-form__logo {
+    margin-bottom: 40px;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .page-with-form {
+    padding: 70px 400px;
+  }
+}

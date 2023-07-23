@@ -1,0 +1,29 @@
+.tag {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -0.72px;
+  position: relative;
+  margin-bottom: 88px;
+}
+
+.tag::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -28px;
+  background-color: black;
+  height: 1px;
+}
+
+@media screen and (min-width: 768px) {
+  .tag {
+    font-size: 22px;
+    letter-spacing: -0.88px;
+    margin-bottom: 93px;
+  }
+  .tag::after {
+    bottom: -23px;
+  }
+}
