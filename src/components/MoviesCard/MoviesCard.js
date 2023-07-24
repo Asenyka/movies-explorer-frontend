@@ -1,7 +1,8 @@
-import saved from "../../images/saved.png";
-import notSaved from "../../images/not-saved.png";
-import cardDelete from "../../images/card_delete.png";
+import saved from "../../images/saved.svg";
+import notSaved from "../../images/not-saved.svg";
+import cardDelete from "../../images/card_delete.svg";
 import { useState } from "react";
+import Button from "../Button/Button";
 
 export default function MoviesCard(props) {
   const [isCardSaved, setIsCardSaved] = useState(props.saved);
@@ -13,16 +14,26 @@ export default function MoviesCard(props) {
       <div className="card__info">
         <h2 className="card__heading">{props.name}</h2>
         {props.forSavedMovies ? (
-          <img
-            className="card__btn"
-            alt="Кнопка удаления фильма из сохраненных"
-            src={cardDelete}
+          <Button
+            modifier="saved-movies"
+            buttonText={
+              <img
+                className="card__btn"
+                alt="Кнопка удаления фильма из сохраненных"
+                src={cardDelete}
+              />
+            }
           />
         ) : (
-          <img
-            className="card__btn"
-            alt="Кнопка сохранения фильма"
-            src={isCardSaved ? saved : notSaved}
+          <Button
+            modifier="movies"
+            buttonText={
+              <img
+                className="card__btn"
+                alt="Кнопка сохранения фильма"
+                src={isCardSaved ? saved : notSaved}
+              />
+            }
             onClick={toggleButtonState}
           />
         )}

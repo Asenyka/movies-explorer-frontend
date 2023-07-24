@@ -15,9 +15,9 @@ export default function Form(props) {
         buttonText={props.buttonText}
         type="submit"
         modifier={
-          props.isFormButtonActive
-            ? `form button_form_${props.name}`
-            : "form_inactive"
+          props.isFormButtonInactive
+            ? "form_inactive"
+            : `form button_form_${props.name}`
         }
       />
     </form>

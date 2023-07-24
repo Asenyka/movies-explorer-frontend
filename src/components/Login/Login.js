@@ -9,7 +9,7 @@ export default function Login() {
   return (
     <PageWithForm
       question="Ещё не зарегистрированы?"
-      linkTo="/register"
+      linkTo="/signup"
       linkText="Регистрация"
       modifier="login"
     >

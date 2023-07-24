@@ -21,7 +21,7 @@
 }
 .header__nav-links-block {
   display: none;
-  flex-direction: row-reverse;
+  flex-direction: row;
   justify-content: space-between;
   min-width: 381px;
   position: absolute;

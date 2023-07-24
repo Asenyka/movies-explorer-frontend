@@ -7,10 +7,10 @@ export default function Profile() {
   const currentUser = useContext(CurrentUserContext);
   const [inputNameValue, setInputNameValue] = useState(currentUser.name);
   const [inputEmailValue, setInputEmailValue] = useState(currentUser.email);
-  const [isFormButtonActive, setIsFormButtonActive] = useState(false);
+  const [isFormButtonInactive, setIsFormButtonInactive] = useState(true);
   function handleEditClick(e) {
     e.preventDefault();
-    setIsFormButtonActive(true);
+    setIsFormButtonInactive(true);
   }
 
   return (
@@ -19,7 +19,7 @@ export default function Profile() {
         name="profile"
         heading={`Привет, ${currentUser.name}!`}
         buttonText="Сохранить"
-        isFormButtonActive={isFormButtonActive}
+        isFormButtoninActive={isFormButtonInactive}
       >
         <Input
           form="profile"
@@ -40,7 +40,7 @@ export default function Profile() {
           onChange={(e) => setInputEmailValue(e.target.value)}
         />
       </Form>
-      {!isFormButtonActive ? (
+      {isFormButtonInactive ? (
         <div className="profile__buttons">
           <Button
             buttonText="Редактировать"

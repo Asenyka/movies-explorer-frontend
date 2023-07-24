@@ -11,7 +11,7 @@
 }
 .aboutProject__timeline {
   display: grid;
-  grid-template-columns: 100px 184px;
+  grid-template-columns: calc(10000vw / 320) calc(18400vw / 320);
   text-align: center;
 }
 

@@ -1,5 +1,5 @@
 import Button from "../Button/Button";
-import cross from "../../images/cross.png";
+import cross from "../../images/cross.svg";
 
 import { Link } from "react-router-dom";
 export default function Navigation(props) {

@@ -59,21 +59,23 @@ function App() {
       <CurrentUserContext.Provider value={currentUser || ""}>
         <div className="App">
           <Header onOpenNavigation={openNavigation} loggedIn={loggedIn} />
-          <Routes>
-            <Route path="/" element={<Main />} />
+          <main>
+            <Routes>
+              <Route path="/" element={<Main />} />
 
-            <Route
-              path="/saved-movies"
-              element={<SavedMovies cards={savedCards} />}
-            />
-            <Route path="/movies" element={<Movies cards={cards} />} />
+              <Route
+                path="/saved-movies"
+                element={<SavedMovies cards={savedCards} />}
+              />
+              <Route path="/movies" element={<Movies cards={cards} />} />
 
-            <Route path="/profile" element={<Profile user={currentUser} />} />
-            <Route path="/signin" element={<Login />} />
-            <Route path="/signup" element={<Register />} />
-          </Routes>
-          <ErrorPage />
-          <Navigation isOpen={isNavigationOpen} onClose={closeNavigation} />
+              <Route path="/profile" element={<Profile user={currentUser} />} />
+              <Route path="/signin" element={<Login />} />
+              <Route path="/signup" element={<Register />} />
+            </Routes>
+            <ErrorPage />
+            <Navigation isOpen={isNavigationOpen} onClose={closeNavigation} />
+          </main>
           <Footer />
         </div>
       </CurrentUserContext.Provider>

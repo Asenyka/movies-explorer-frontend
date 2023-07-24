@@ -1,5 +1,7 @@
 .App {
-  font-family: Inter;
+  font-family: "Inter", sans-serif;
+  text-rendering: optimizeLegibility;
+  max-width: 1200px;
   font-style: normal;
   margin: 0 14px;
 }

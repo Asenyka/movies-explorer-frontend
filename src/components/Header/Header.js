@@ -1,6 +1,6 @@
-import logo from "../../images/logo.png";
+import logo from "../../images/logo.svg";
 import Button from "../Button/Button";
-import navpic from "../../images/navpic.png";
+import navpic from "../../images/navpic.svg";
 import { Link } from "react-router-dom";
 
 export default function Header(props) {

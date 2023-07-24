@@ -27,7 +27,7 @@
   height: 20px;
   object-fit: cover;
   margin-right: 13px;
-  background-image: url("../../images/smalltumb.png");
+  background-image: url("../../images/smalltumb.svg");
   content: "";
   display: inline-block;
   background-repeat: no-repeat;
@@ -36,7 +36,7 @@
 }
 
 .filter__checkbox:checked + label::before {
-  background-image: url("../../images/smalltumb_off.png");
+  background-image: url("../../images/smalltumb_off.svg");
 }
 
 .filter__name {

@@ -11,6 +11,11 @@
   font-weight: 400;
   line-height: normal;
 }
+.input__field:focus {
+  outline: #a0a0a0 solid 1px;
+  background-color: #f9f9f9;
+}
+
 .input {
   display: flex;
   flex-direction: column;
@@ -62,6 +67,10 @@
   margin-right: 10px;
   padding-left: 16px;
 }
+.input__field_searchform:focus {
+  background-color: #ffd4c7;
+  outline: #ff6838 solid 1px;
+}
 
 .input__field_profile {
   border-bottom: none;
@@ -73,6 +82,9 @@
   align-self: end;
 }
 @media screen and (min-width: 480px) {
+  .input__field {
+    width: 390px;
+  }
   .input__field_searchform {
     width: calc(34000vw / 480);
   }
@@ -81,9 +93,6 @@
   }
 }
 @media screen and (min-width: 768px) {
-  .input__field {
-    width: 390px;
-  }
   .input__field_searchform {
     width: calc(62700vw / 768);
   }
