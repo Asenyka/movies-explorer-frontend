@@ -50,7 +50,7 @@
 
 @media screen and (min-width: 768px) {
   .filter {
-    margin-top: 31;
+    margin-top: 31px;
     margin-bottom: 51px;
   }
   .filter::after {

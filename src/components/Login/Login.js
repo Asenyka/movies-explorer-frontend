@@ -7,6 +7,7 @@ export default function Login() {
     console.log("submit");
   }
   return (
+
     <PageWithForm
       question="Ещё не зарегистрированы?"
       linkTo="/signup"

@@ -10,7 +10,7 @@ export default function MoviesCard(props) {
     isCardSaved ? setIsCardSaved(false) : setIsCardSaved(true);
   }
   return (
-    <div className="card">
+    <li className="card">
       <div className="card__info">
         <h2 className="card__heading">{props.name}</h2>
         {props.forSavedMovies ? (
@@ -44,6 +44,6 @@ export default function MoviesCard(props) {
         src={props.snapshot}
         alt={`Иллюстрация к фильму "${props.name}"`}
       />
-    </div>
+    </li>
   );
 }

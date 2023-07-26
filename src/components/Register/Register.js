@@ -7,6 +7,7 @@ export default function Register() {
     console.log("submit");
   }
   return (
+   
     <PageWithForm
       question="Уже зарегистрированы?"
       linkTo="/register"

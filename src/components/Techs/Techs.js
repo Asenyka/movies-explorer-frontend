@@ -9,15 +9,15 @@ const Techs = forwardRef((props, ref) => {
         На курсе веб-разработки мы освоили технологии, которые применили в
         дипломном проекте.
       </p>
-      <span className="techs__blocks">
-        <p className="techs__block">HTML</p>
-        <p className="techs__block">CSS</p>
-        <p className="techs__block">JS</p>
-        <p className="techs__block">React</p>
-        <p className="techs__block">Git</p>
-        <p className="techs__block">Express.js</p>
-        <p className="techs__block">mongoDB</p>
-      </span>
+      <div className="techs__blocks">
+        <span className="techs__block">HTML</span>
+        <span className="techs__block">CSS</span>
+        <span className="techs__block">JS</span>
+        <span className="techs__block">React</span>
+        <span className="techs__block">Git</span>
+        <span className="techs__block">Express.js</span>
+        <span className="techs__block">mongoDB</span>
+      </div>
     </section>
   );
 });

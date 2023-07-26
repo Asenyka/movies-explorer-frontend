@@ -18,7 +18,7 @@ export default function Main() {
     studentRef.current.scrollIntoView({ behavior: "smooth" });
   }
   return (
-    <main className="main">
+    <section className="main">
       <Promo
         onTechsClick={handleTechsClick}
         onProjectClick={handleProjectClick}
@@ -28,6 +28,6 @@ export default function Main() {
       <Techs ref={techsRef} />
       <AboutMe ref={studentRef} />
       <Portfolio />
-    </main>
+    </section>
   );
 }

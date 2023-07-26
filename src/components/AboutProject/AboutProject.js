@@ -20,14 +20,14 @@ const AboutProject = forwardRef((props, ref) => {
           соблюдать, чтобы успешно защититься.
         </p>
       </div>
-      <span className="aboutProject__timeline">
-        <p className="aboutProject__timeline-text aboutProject__timeline-text_green">
+      <div className="aboutProject__timeline">
+        <span className="aboutProject__timeline-text aboutProject__timeline-text_green">
           1 неделя
-        </p>
-        <p className="aboutProject__timeline-text">4 недели</p>
-        <p className="aboutProject__timeline-caption">Back-end</p>
-        <p className="aboutProject__timeline-caption">Front-end</p>
-      </span>
+        </span>
+        <span className="aboutProject__timeline-text">4 недели</span>
+        <span className="aboutProject__timeline-caption">Back-end</span>
+        <span className="aboutProject__timeline-caption">Front-end</span>
+      </div>
     </section>
   );
 });

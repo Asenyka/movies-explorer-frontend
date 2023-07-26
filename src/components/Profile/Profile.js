@@ -10,7 +10,7 @@ export default function Profile() {
   const [isFormButtonInactive, setIsFormButtonInactive] = useState(true);
   function handleEditClick(e) {
     e.preventDefault();
-    setIsFormButtonInactive(true);
+    setIsFormButtonInactive(false);
   }
 
   return (
@@ -19,7 +19,7 @@ export default function Profile() {
         name="profile"
         heading={`Привет, ${currentUser.name}!`}
         buttonText="Сохранить"
-        isFormButtoninActive={isFormButtonInactive}
+        isFormButtonInactive={isFormButtonInactive}
       >
         <Input
           form="profile"

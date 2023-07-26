@@ -1,5 +1,5 @@
 .page-with-form {
-  padding: calc(3000vw / 320) auto;
+  padding: calc(3000vw/320) 0;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -33,9 +33,10 @@
 
 @media screen and (min-width: 768px) {
   .page-with-form {
-    padding: 232px calc(18600vw / 768);
+    padding: 232px calc(50% - 198px);
     align-items: start;
-    min-width: 396px;
+  width: 396px;
+    
   }
 
   .page-with-form__logo {
@@ -45,6 +46,7 @@
 
 @media screen and (min-width: 1280px) {
   .page-with-form {
-    padding: 70px 400px;
+    padding-top: 70px;
+    padding-bottom: 70px;
   }
 }
