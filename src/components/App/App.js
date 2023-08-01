@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Route, Routes, BrowserRouter } from "react-router-dom";
+import { Route, Routes, BrowserRouter} from "react-router-dom";
 
 import "./App.css";
 import CurrentUserContext from "../../contexts/CurrentUserContext";
@@ -13,15 +13,15 @@ import Login from "../Login/Login";
 import Profile from "../Profile/Profile";
 import Navigation from "../Navigation/Navigation";
 import ErrorPage from "../ErrorPage/ErrorPage";
+import ProtectedRouteElement from "../PotectedRouteElement";
 import snapshot from "../../images/snapshot.png";
+import { login, register, checkToken } from "../../utils/Authentification";
 
 function App() {
   const [isNavigationOpen, setIsNavigationOpen] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(true);
-  const [currentUser, setCurrentUser] = useState({
-    name: "Анастасия",
-    email: "pochta@yandex.ru",
-  });
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [currentUser, setCurrentUser] = useState({});
+
   function openNavigation() {
     setIsNavigationOpen(true);
   }
@@ -54,6 +54,36 @@ function App() {
   const savedCards = cards.filter((card) => {
     return card.saved === true;
   });
+  function handleRegister(userData) {
+    register(userData)
+    .then((userData) => {
+      setCurrentUser({userData})
+    })
+      //.then((user) => {
+       
+       // navigate("/sign-in");
+        //setTip("Вы успешно \n зарегистрировались!");
+        //setTipImage(tipImageSuccess);
+    //  })
+      .catch((err) => {
+        console.log(err);
+        //setTip("Что-то пошло не так! \n Попробуйте еще раз.");
+        //setTipImage(tipImageFailure);
+      });
+  }
+
+  function handleLogin(userData) {
+    login(userData)
+      .then((res) => {
+        localStorage.setItem("jwt", res.token);
+        setLoggedIn(true);
+        setCurrentUser({userData});
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
   return (
     <BrowserRouter>
       <CurrentUserContext.Provider value={currentUser || ""}>
@@ -65,13 +95,16 @@ function App() {
 
               <Route
                 path="/saved-movies"
-                element={<SavedMovies cards={savedCards} />}
+                element={ <ProtectedRouteElement
+                  element={SavedMovies} cards={savedCards} />}
               />
-              <Route path="/movies" element={<Movies cards={cards} />} />
+              <Route path="/movies" element={ <ProtectedRouteElement
+                  element={Movies} cards={cards} />} />
 
-              <Route path="/profile" element={<Profile user={currentUser} />} />
-              <Route path="/signin" element={<Login />} />
-              <Route path="/signup" element={<Register />} />
+              <Route path="/profile" element={<ProtectedRouteElement
+                  element={Profile} user={currentUser} />} />
+              <Route path="/signin" element={<Login onLogin={handleLogin}/>} />
+              <Route path="/signup" element={<Register onRegister={handleRegister}/>} />
             </Routes>
             <ErrorPage />
             <Navigation isOpen={isNavigationOpen} onClose={closeNavigation} />

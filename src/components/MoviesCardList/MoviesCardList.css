@@ -1,8 +1,9 @@
 .card-list {
   display: flex;
   flex-direction: column;
-  align-self: start;
+  align-self: center;
   padding: 0;
+  margin: 40px 0 0;
 }
 @media screen and (min-width: 768px) {
   .card-list {
@@ -12,7 +13,8 @@
     grid-auto-rows: auto;
     column-gap: 30px;
     row-gap: 36px;
-    align-self: center;
+    align-self: start;
+    margin-top: 70px;
   }
 }
 @media screen and (min-width: 1280px) {
