@@ -7,12 +7,15 @@ export default function MoviesCardList({ cards, forSavedMovies }) {
         <MoviesCard
           key={card.id}
           saved={card.saved}
-          name={card.name}
+          nameEN={card.nameEN}
+          nameRU={card.nameRU}
           duration={card.duration}
-          snapshot={card.snapshot}
+          snapshot={card.image.url}
+          trailer={card.trailerLink}
           forSavedMovies={forSavedMovies}
         />
-      ))}
+      )
+      )}
     </ul>
   );
 }

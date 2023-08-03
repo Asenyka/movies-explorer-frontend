@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Route, Routes, BrowserRouter} from "react-router-dom";
 
 import "./App.css";
@@ -14,13 +14,26 @@ import Profile from "../Profile/Profile";
 import Navigation from "../Navigation/Navigation";
 import ErrorPage from "../ErrorPage/ErrorPage";
 import ProtectedRouteElement from "../PotectedRouteElement";
-import snapshot from "../../images/snapshot.png";
+import { getCards } from "../../utils/MoviesApi";
 import { login, register, checkToken } from "../../utils/Authentification";
 
 function App() {
   const [isNavigationOpen, setIsNavigationOpen] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(false );
   const [currentUser, setCurrentUser] = useState({});
+  const [cards, setCards] = useState([]);
+  useEffect(() => {
+    if (loggedIn) {
+    getCards()
+      .then((cards) => {
+        setCards(cards);
+        console.log(cards)
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+    }
+  }, [loggedIn]);
 
   function openNavigation() {
     setIsNavigationOpen(true);
@@ -28,29 +41,7 @@ function App() {
   function closeNavigation() {
     setIsNavigationOpen(false);
   }
-  const cards = [
-    {
-      id: 12345676,
-      name: "33 слова о дизайне",
-      duration: "1ч 47м",
-      saved: true,
-      snapshot: snapshot,
-    },
-    {
-      id: 12345689,
-      name: "34 слова о дизайне",
-      saved: false,
-      duration: "1ч 48м",
-      snapshot: snapshot,
-    },
-    {
-      id: 12345657,
-      name: "35 слов о дизайне",
-      saved: false,
-      duration: "1ч 50м",
-      snapshot: snapshot,
-    },
-  ];
+
   const savedCards = cards.filter((card) => {
     return card.saved === true;
   });
@@ -96,13 +87,13 @@ function App() {
               <Route
                 path="/saved-movies"
                 element={ <ProtectedRouteElement
-                  element={SavedMovies} cards={savedCards} />}
+                  element={SavedMovies} cards={savedCards} loggedIn={loggedIn} />}
               />
               <Route path="/movies" element={ <ProtectedRouteElement
-                  element={Movies} cards={cards} />} />
+                  element={Movies} cards={cards} loggedIn={loggedIn} />} />
 
               <Route path="/profile" element={<ProtectedRouteElement
-                  element={Profile} user={currentUser} />} />
+                  element={Profile} user={currentUser} loggedIn={loggedIn}/>} />
               <Route path="/signin" element={<Login onLogin={handleLogin}/>} />
               <Route path="/signup" element={<Register onRegister={handleRegister}/>} />
             </Routes>

@@ -9,10 +9,11 @@ export default function MoviesCard(props) {
   function toggleButtonState() {
     isCardSaved ? setIsCardSaved(false) : setIsCardSaved(true);
   }
+ 
   return (
     <li className="card">
       <div className="card__info">
-        <h2 className="card__heading">{props.name}</h2>
+        <h2 className="card__heading">{props.nameRU}</h2>
         {props.forSavedMovies ? (
           <Button
             modifier="saved-movies"
@@ -41,8 +42,8 @@ export default function MoviesCard(props) {
       </div>
       <img
         className="card__snapshot"
-        src={props.snapshot}
-        alt={`Иллюстрация к фильму "${props.name}"`}
+        src={`https://api.nomoreparties.co/${props.snapshot}`}
+        alt={`Иллюстрация к фильму "${props.nameRU}"`}
       />
     </li>
   );
