@@ -1,0 +1,102 @@
+.link {
+  color: #000000;
+  text-decoration: none;
+  cursor: pointer;
+}
+.link:hover {
+  opacity: 0.7;
+}
+.link:active {
+  font-weight: 500;
+}
+.link_to-profile {
+  display: block;
+  font-size: 14px;
+  line-height: 16px;
+  background-color: #f9f9f9;
+  border-radius: 20px;
+  padding: 8px 0;
+  width: 100px;
+  text-align: center;
+}
+.link_navigation:active {
+  text-decoration: underline;
+  text-underline-offset: 7px;
+  text-decoration-thickness: 2px;
+}
+.link_header-auth {
+  font-size: 10px;
+  font-weight: 500;
+  border-radius: 3px;
+  min-width: 54px;
+  line-height: 16px;
+  text-align: center;
+  align-self: center;
+  padding: 5px 0;
+}
+.link_page-with-form {
+  color: #ff6838;
+}
+
+.link_header-auth_login {
+  background-color: #2be080;
+}
+
+.link_portfolio {
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 28px;
+  letter-spacing: -0.72px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
+.link_aboutMe {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.link_footer_yandex {
+  margin: 30px 0 12px;
+}
+
+.link_footer_github {
+  margin: 0 0 30px;
+}
+
+@media screen and (min-width: 768px) {
+  .link_header_auth {
+    font-size: 12px;
+    min-width: 76px;
+    min-height: 32px;
+  }
+  .link_portfolio {
+    font-size: 28px;
+    line-height: 50px;
+    letter-spacing: -1.12px;
+  }
+  .link_aboutme {
+    grid-column: 1;
+    grid-row: 4;
+    align-self: end;
+  }
+  .link_footer {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  .link_page-with-form {
+    font-size: 14px;
+    min-width: 197px;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .link_portfolio {
+    font-size: 30px;
+    letter-spacing: -1.2px;
+  }
+}

@@ -1,0 +1,21 @@
+.navtab {
+  padding: 0;
+  margin: 0 auto;
+  width: 258px;
+  max-width: 308px;
+  list-style: none;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  font-weight: 500;
+  line-height: 16px;
+  font-size: 10px;
+}
+
+@media screen and (min-width: 768px) {
+  .navtab {
+    width: 308px;
+    color: #000;
+    font-size: 12px;
+  }
+}

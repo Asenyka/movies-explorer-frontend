@@ -1,0 +1,22 @@
+.profile {
+  padding: calc(7000vw / 320) calc(3000vw / 320) calc(4000vw / 320);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.profile__buttons {
+  display: flex;
+  flex-direction: column;
+}
+
+@media screen and (min-width: 768px) {
+  .profile {
+    padding: 243px 179px 269px;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .profile {
+    padding: 74px 435px 70px;
+  }
+}

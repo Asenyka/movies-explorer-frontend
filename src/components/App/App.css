@@ -1,0 +1,21 @@
+.App {
+  font-family: "Inter", sans-serif;
+  text-rendering: optimizeLegibility;
+  max-width: 1200px;
+  font-style: normal;
+  margin: 0 14px;
+
+  
+}
+@media screen and (min-width: 768px) {
+  .App {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+}
+@media screen and (min-width: 1280px) {
+  .App {
+    margin-left: auto;
+    margin-right: auto;
+  }
+}

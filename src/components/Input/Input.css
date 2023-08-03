@@ -1,0 +1,113 @@
+.input__field {
+  border: none;
+  outline: none;
+  border-bottom: 1px solid #e8e8e8;
+  min-height: 33px;
+  width: calc(26000vw / 320);
+  margin: 5px 0 0;
+  padding: 0;
+  color: #000;
+  font-size: 14px;
+  font-weight: 400;
+  line-height: normal;
+}
+.input__field:focus {
+  outline: #a0a0a0 solid 1px;
+  background-color: #f9f9f9;
+}
+
+.input {
+  display: flex;
+  flex-direction: column;
+}
+
+.input_profile_name::after {
+  content: "";
+  left: 0;
+  right: 0;
+  top: 139px;
+  background-color: #e8e8e8;
+  height: 1px;
+  position: absolute;
+}
+
+.input__label {
+  color: #a0a0a0;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: normal;
+  display: flex;
+  flex-direction: column;
+}
+.input__label_profile {
+  flex-direction: row;
+  color: #000;
+  align-items: center;
+  justify-content: space-between;
+  width: calc(26000vw / 320);
+}
+
+.input__error {
+  color: #ee3465;
+  font-size: 10px;
+  font-weight: 400;
+  line-height: normal;
+}
+
+.input__field_searchform {
+  width: calc(19600vw / 320);
+  min-height: 44px;
+  background-color: #f9f9f9;
+  border-radius: 4px;
+  border-bottom: none;
+  color: #a0a0a0;
+  font-size: 12px;
+  line-height: 18px;
+  margin-top: 0px;
+  margin-right: 10px;
+  padding-left: 16px;
+}
+.input__field_searchform:focus {
+  background-color: #ffd4c7;
+  outline: #ff6838 solid 1px;
+}
+
+.input__field_profile {
+  border-bottom: none;
+  min-height: 30px;
+  width: 120px;
+  margin-top: 0;
+  font-size: 11px;
+  text-align: right;
+  align-self: end;
+}
+@media screen and (min-width: 480px) {
+  .input__field {
+    width: 390px;
+  }
+  .input__field_searchform {
+    width: calc(34000vw / 480);
+  }
+  .input__label_profile {
+    width: 410px;
+  }
+}
+@media screen and (min-width: 768px) {
+  .input__field_searchform {
+    width: calc(62700vw / 768);
+  }
+
+  .input__field_profile {
+    width: 120px;
+  }
+
+  .input_profile_name::after {
+    top: 155px;
+  }
+}
+@media screen and (min-width: 1024px) {
+  .input__field_searchform {
+    width: calc(106000vw / 1280);
+    max-width: 1060px;
+  }
+}

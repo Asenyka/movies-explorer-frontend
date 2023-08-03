@@ -1,0 +1,39 @@
+.error {
+  display: none;
+  flex-direction: column;
+  padding: 329px 10px 30px;
+}
+.error__code {
+  text-align: center;
+  font-size: 80px;
+  font-weight: 400;
+  line-height: normal;
+  margin: 0 0 10px;
+}
+.error__message {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: normal;
+  margin: 0 0 284px;
+}
+
+@media screen and (min-width: 768px) {
+  .error {
+    padding: 408px 184px 222px;
+  }
+  .error__code {
+    font-size: 140px;
+    margin-bottom: 5px;
+  }
+  .error__message {
+    font-size: 16px;
+    margin-bottom: 184px;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .error {
+    padding: 246px 440px 60px;
+  }
+}

@@ -1,0 +1,105 @@
+.aboutMe {
+  min-height: 764px;
+  padding: 70px 0;
+}
+.aboutMe__name {
+  margin: 40px 0 20px;
+  font-size: 30px;
+  font-weight: 400;
+  line-height: normal;
+  letter-spacing: -1.2px;
+}
+.aboutMe__pic {
+  display: block;
+  object-fit: cover;
+  width: 292px;
+  height: 352px;
+  border-radius: 10px;
+}
+.aboutMe__job {
+  margin: 0 0 20px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 16px;
+}
+.aboutMe__info {
+  margin: 0 0 40px;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 16px;
+  white-space: normal;
+}
+
+@media screen and (min-width: 768px) {
+  .aboutMe {
+    min-height: 424px;
+    padding-top: 90px;
+    padding-bottom: 90px;
+    margin: 0 30px;
+  }
+  .aboutMe__info-block {
+    display: grid;
+    grid-template-columns: calc(34800vw / 768) 255px;
+    grid-template-rows: repeat(4, auto);
+    grid-column-gap: calc(6500vw / 768);
+  }
+  .aboutMe__name {
+    margin-top: 0;
+    margin-bottom: 16px;
+    grid-column: 1;
+    grid-row: 1;
+    font-size: 40px;
+    letter-spacing: -1.6px;
+  }
+  .aboutMe__pic {
+    grid-column: 2;
+    grid-row: span 4;
+    width: 255px;
+    height: 307px;
+  }
+  .aboutMe__job {
+    grid-column: 1;
+    grid-row: 2;
+    font-size: 12px;
+    line-height: 18px;
+  }
+  .aboutMe__info {
+    grid-column: 1;
+    grid-row: 3;
+    font-size: 12px;
+    line-height: 18px;
+    margin-bottom: 87px;
+  }
+}
+
+@media screen and (min-width: 1280px) {
+  .aboutMe {
+    min-height: 454px;
+    padding-top: 110px;
+    padding-bottom: 100px;
+  }
+  .aboutMe__info-block {
+    display: grid;
+    grid-template-columns: 600px 270px;
+    grid-column-gap: 270px;
+  }
+  .aboutMe__name {
+    margin-bottom: 18px;
+    font-size: 50px;
+    line-height: 58px;
+    letter-spacing: -2px;
+  }
+  .aboutMe__pic {
+    width: 270px;
+    height: 327px;
+  }
+  .aboutMe__job {
+    font-size: 18px;
+    line-height: 20px;
+  }
+  .aboutMe__info {
+    font-size: 14px;
+    line-height: 22px;
+    margin-bottom: 65px;
+  }
+}
