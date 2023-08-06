@@ -2,9 +2,10 @@ import SearchForm from "../SearchForm/SearchForm";
 import FilterCheckbox from "../FilterCheckBox/FilterCheckBox";
 
 export default function PageWithMovies(props) {
+
   return (
     <div className="page-with-movies">
-      <SearchForm />
+      <SearchForm onSubmit={props.onSubmit} />
       <FilterCheckbox />
       {props.children}
     </div>

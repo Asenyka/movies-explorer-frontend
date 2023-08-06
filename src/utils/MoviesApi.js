@@ -1,10 +1,8 @@
     
     const basePath="https://api.nomoreparties.co/beatfilm-movies";
     function getHeaders() {
-        const token=localStorage.getItem("jwt");
         return {
           "Content-Type": "application/json",
-          authorization: `Bearer ${token}`,
         };
       }
       function getJson(res) {

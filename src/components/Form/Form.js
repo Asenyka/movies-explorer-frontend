@@ -5,7 +5,7 @@ export default function Form(props) {
       className={`form form_${props.name}`}
       method="get"
       name={props.name}
-      onSubmit={props.onSubmit}
+      onSubmit={props.onSubmit(props.searchString)}
     >
       <h2 className={`form__heading form__heading_${props.name}`}>
         {props.heading}

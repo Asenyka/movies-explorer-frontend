@@ -1,15 +1,16 @@
+import { useState } from "react";
 import Form from "../Form/Form";
 import Input from "../Input/Input";
-export default function SearchForm() {
-  function handleSubmit() {
-    console.log("submit");
-  }
+
+export default function SearchForm(props) {
+const[searchString, setSearchString] = useState('')
   return (
     <div className="searchform">
       <Form
         heading=""
         name="searchform"
-        onSubmit={handleSubmit}
+        searchString={searchString}
+        onSubmit={props.onSubmit}
         buttonText="Найти"
       >
         <Input
@@ -18,7 +19,8 @@ export default function SearchForm() {
           label=""
           id="search"
           type="text"
-          placeholder="Фильм"
+          placeholder="Ключевое слово"
+          onChange={(e) => setSearchString(e.target.value)}
         />
       </Form>
     </div>
