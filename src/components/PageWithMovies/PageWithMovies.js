@@ -6,7 +6,7 @@ export default function PageWithMovies(props) {
   return (
     <div className="page-with-movies">
       <SearchForm onSubmit={props.onSubmit} />
-      <FilterCheckbox />
+      <FilterCheckbox onClick={props.onFilterClick} />
       {props.children}
     </div>
   );

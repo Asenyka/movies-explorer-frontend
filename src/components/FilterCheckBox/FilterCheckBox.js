@@ -1,11 +1,20 @@
-export default function FilterCheckbox() {
-  return (
+import { useState } from "react";
+
+export default function FilterCheckbox(props) {
+  const [filterChecked, setFilterChecked] = useState(false);
+  function handleFilterClick(){
+    setFilterChecked(!filterChecked);
+    props.onClick(!filterChecked);
+   }
+    return (
     <div className="filter">
       <input
         className="filter__checkbox"
         id="checkbox"
         name="checkbox"
         type="checkbox"
+       onChange={handleFilterClick}
+       checked={filterChecked}
       />
       <label htmlFor="checkbox" className="filter__name">
         Короткометражки

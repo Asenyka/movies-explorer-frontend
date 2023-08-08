@@ -23,7 +23,11 @@ function App() {
   const [loggedIn, setLoggedIn] = useState(false );
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
+  const [filterState, setFilterState] = useState(false);
+  const[onSearch, setOnSearch]=useState(false);
+  const[tipText, setTipText]=useState('')
   const jwt = localStorage.getItem("jwt");
+ 
 
   useEffect(() => {if (jwt) {
     const jwt = localStorage.getItem("jwt");
@@ -98,22 +102,36 @@ function App() {
         console.log(err);
       });
   }
+  function handleFilterClick(state){
+    setFilterState(state);
+   }
+   function filterItems(arr, query) {
+    return arr.filter((el) => el.nameRU.toLowerCase().includes(query.toLowerCase())||el.nameEN.toLowerCase().includes(query.toLowerCase()));
+  }
+  function filterDuration(arr) {
+   return arr.filter((el) => el.duration<=40)}
+
   function handleSearchSubmit(string) {
-    function filterItems(arr, query) {
-      return arr.filter((el) => el.toLowerCase().includes(query.toLowerCase()));
-    }
+    setOnSearch(true);
     getCards()
     .then((cards)=>{
       const newCards = filterItems(cards, string);
+      if(filterState){
+        const shortFilms = filterDuration(newCards);
+        if(shortFilms.length!==0) 
+      {setCards(shortFilms);}
+      else{setTipText("Ничего не найдено")}
+      }else{
       if (newCards.length!==0){
 setCards(newCards);
       } else {
-        console.log(
+        setTipText(
           "Ничего не найдено"
         )
       }
-    })
+    }})
     .catch((err) => {
+      setTipText("Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз.")
       console.log(err);
     });
   }
@@ -133,7 +151,7 @@ setCards(newCards);
                   element={SavedMovies} cards={savedCards} loggedIn={loggedIn} />}
               />
               <Route path="/movies" element={ <ProtectedRouteElement
-                  element={Movies} cards={cards} loggedIn={loggedIn} onSubmit={handleSearchSubmit}/>} />
+                  element={Movies} cards={cards} loggedIn={loggedIn} onSubmit={handleSearchSubmit} onFilterClick={handleFilterClick} onSearch={onSearch} tipText={tipText}/>} />
 
               <Route path="/profile" element={<ProtectedRouteElement
                   element={Profile} user={currentUser} loggedIn={loggedIn}/>} />

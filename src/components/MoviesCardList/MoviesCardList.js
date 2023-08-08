@@ -1,6 +1,7 @@
 import MoviesCard from "../MoviesCard/MoviesCard";
 
 export default function MoviesCardList({ cards, forSavedMovies }) {
+  console.log(cards)
   return (
     <ul className="card-list" aria-label="Галлерея кинофильмов">
       {cards.map((card) => (
