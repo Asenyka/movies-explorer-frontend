@@ -58,4 +58,27 @@ function getJson(res) {
          });
          return getJson(res);
       }
+
+      export async function getUserCards() {
+        const res = await fetch(`${basePath}/movies`, {
+          method: "GET",
+          headers: getHeaders(),
+        });
+        return getJson(res);
+      }
+      export async function sendUserCard(cardData) {
+        const res = await fetch(`${basePath}/movies`, {
+          method: "POST",
+          headers: getHeaders(),
+          body: JSON.stringify(cardData),
+        });
+        return getJson(res);
+      }
+      export async function deleteUserCard(id) {
+        const res = await fetch(`${basePath}/movies/:_id`, {
+          method: "DELETE",
+          headers: getHeaders(),
+        });
+        return getJson(res);
+      }
     

@@ -1,9 +1,14 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Form from "../Form/Form";
 import Input from "../Input/Input";
 
 export default function SearchForm(props) {
-const[searchString, setSearchString] = useState('')
+const[searchString, setSearchString] = useState('');
+const searchedString = localStorage.getItem("searchString");
+useEffect(()=>{ 
+    setSearchString(searchedString);
+ },[])
+
   return (
     <div className="searchform">
       <Form
@@ -20,6 +25,7 @@ const[searchString, setSearchString] = useState('')
           id="search"
           type="text"
           placeholder="Ключевое слово"
+          value={searchString}
           onChange={(e) => setSearchString(e.target.value)}
         />
       </Form>

@@ -3,6 +3,7 @@ import PageWithMovies from "../PageWithMovies/PageWithMovies";
 import Preloader from "../Preloader/Preloader";
 
 export default function SavedMovies({ cards }) {
+  console.log(cards)
   if (cards.length !== 0) {
     return (
       <section className="saved-movies">

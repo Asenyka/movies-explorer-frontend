@@ -4,10 +4,18 @@ import cardDelete from "../../images/card_delete.svg";
 import { useState } from "react";
 import Button from "../Button/Button";
 
+
 export default function MoviesCard(props) {
   const [isCardSaved, setIsCardSaved] = useState(props.saved);
-  function toggleButtonState() {
-    isCardSaved ? setIsCardSaved(false) : setIsCardSaved(true);
+
+
+  function toggleButtonState(cardID) {
+    if(isCardSaved){ 
+  //  props.onDelete(cardID)
+    setIsCardSaved(false)
+   } else{
+  //    props.onSave(cardID)
+     setIsCardSaved(true)}
   }
  
   return (
@@ -35,7 +43,7 @@ export default function MoviesCard(props) {
                 src={isCardSaved ? saved : notSaved}
               />
             }
-            onClick={toggleButtonState}
+          //  onClick={toggleButtonState(props.key)}
           />
         )}
         <span className="card__duration">{props.duration}</span>
