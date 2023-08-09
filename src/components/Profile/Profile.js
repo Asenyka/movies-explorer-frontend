@@ -3,7 +3,7 @@ import Form from "../Form/Form";
 import Input from "../Input/Input";
 import { useContext, useState } from "react";
 import CurrentUserContext from "../../contexts/CurrentUserContext";
-export default function Profile() {
+export default function Profile(props) {
   const currentUser = useContext(CurrentUserContext);
   const [inputNameValue, setInputNameValue] = useState(currentUser.name);
   const [inputEmailValue, setInputEmailValue] = useState(currentUser.email);
@@ -50,6 +50,7 @@ export default function Profile() {
           <Button
             buttonText="Выйти из аккаунта"
             modifier="profile button_profile_exit"
+            onClick={props.onCheckout}
           />
         </div>
       ) : (

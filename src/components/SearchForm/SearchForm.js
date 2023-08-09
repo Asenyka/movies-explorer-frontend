@@ -8,14 +8,16 @@ const searchedString = localStorage.getItem("searchString");
 useEffect(()=>{ 
     setSearchString(searchedString);
  },[])
-
+function handleSearch(e){
+e.preventDefault();
+props.onSearchSubmit(searchString)
+}
   return (
     <div className="searchform">
       <Form
         heading=""
         name="searchform"
-        searchString={searchString}
-        onSubmit={props.onSubmit}
+        onSubmit={handleSearch}
         buttonText="Найти"
       >
         <Input

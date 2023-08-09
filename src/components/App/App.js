@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Route, Routes, BrowserRouter } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 
 import "./App.css";
 import CurrentUserContext from "../../contexts/CurrentUserContext";
@@ -28,7 +28,7 @@ function App() {
   const [filterState, setFilterState] = useState(false);
   const [onSearch, setOnSearch] = useState(false);
   const [tipText, setTipText] = useState("");
-  
+  const navigate = useNavigate();
   const jwt = localStorage.getItem("jwt");
   useEffect(() => {
     if (jwt) {
@@ -96,6 +96,7 @@ el.saved = true;
         localStorage.setItem("jwt", res.token);
         setLoggedIn(true);
         setCurrentUser({ userData });
+        navigate("/movies", { replace: true });
       })
       .catch((err) => {
         console.log(err);
@@ -167,12 +168,15 @@ el.saved = true;
         console.log(err);
       });
   }
-
+  function handleCheckOut() {
+    localStorage.clear();
+    setLoggedIn(false);
+    navigate('/signin')
+  }
 
 
   return (
-    <BrowserRouter>
-      <CurrentUserContext.Provider value={currentUser || ""}>
+        <CurrentUserContext.Provider value={currentUser || ""}>
         <div className="App">
           <Header onOpenNavigation={openNavigation} loggedIn={loggedIn} />
           <main>
@@ -196,7 +200,7 @@ el.saved = true;
                     element={Movies}
                    cards={cards}
                     loggedIn={loggedIn}
-                    onSubmit={handleSearchSubmit}
+                    onSearchSubmit={handleSearchSubmit}
                     onFilterClick={handleFilterClick}
                     onSearch={onSearch}
                     tipText={tipText}
@@ -211,6 +215,7 @@ el.saved = true;
                     element={Profile}
                     user={currentUser}
                     loggedIn={loggedIn}
+                    onCheckout={handleCheckOut}
                   />
                 }
               />
@@ -226,7 +231,6 @@ el.saved = true;
           <Footer />
         </div>
       </CurrentUserContext.Provider>
-    </BrowserRouter>
   );
 }
 

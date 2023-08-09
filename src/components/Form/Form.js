@@ -2,11 +2,7 @@ import Button from "../Button/Button";
 export default function Form(props) {
   return (
     <form
-    onSubmit={
-      (e)=> {
-        e.preventDefault();
-        props.onSubmit(props.searchString);
-        }}
+    onSubmit={props.onSubmit}
       className={`form form_${props.name}`}
       method="get"
       name={props.name}

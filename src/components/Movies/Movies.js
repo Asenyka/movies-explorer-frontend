@@ -8,7 +8,7 @@ import { useState, useEffect } from "react";
 export default function Movies({
   cards,
   onSearch,
-  onSubmit,
+  onSearchSubmit,
   onFilterClick,
   tipText,
 }) {
@@ -25,9 +25,10 @@ export default function Movies({
      setCardsTotal(cards);
     } else {
       const previousCards = JSON.parse(searchedCards);
+      if (previousCards){
       setCardsToShow(previousCards.slice(0, cardNumber));
      setCardsTotal(previousCards);
-    }
+    }}
   }, [cards, cardNumber, searchedCards]);
 
   function moreOnClick() {
@@ -38,7 +39,7 @@ export default function Movies({
   if (cardsToShow.length !== 0) {
     return (
       <section className="movies">
-        <PageWithMovies onSubmit={onSubmit} onFilterClick={onFilterClick}>
+        <PageWithMovies onSearchSubmit={onSearchSubmit} onFilterClick={onFilterClick}>
           <MoviesCardList cards={cardsToShow} forSavedMovies={false} />
         </PageWithMovies>
         {cardsToShow.length < cards.length ? (
@@ -56,7 +57,7 @@ export default function Movies({
   } else {
     return (
       <section className="movies">
-        <PageWithMovies onSubmit={onSubmit} onFilterClick={onFilterClick}>
+        <PageWithMovies onSearchSubmit={onSearchSubmit} onFilterClick={onFilterClick}>
           {onSearch === false ? <Preloader /> : <SearchTip tipText={tipText} />}
         </PageWithMovies>
       </section>
