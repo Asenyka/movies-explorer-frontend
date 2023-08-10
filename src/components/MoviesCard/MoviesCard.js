@@ -7,16 +7,21 @@ import Button from "../Button/Button";
 
 export default function MoviesCard(props) {
   const [isCardSaved, setIsCardSaved] = useState(props.saved);
+const cardID=props.id;
 
-
-  function toggleButtonState(cardID) {
-    if(isCardSaved){ 
+//  function toggleButtonState() {
+   // if(isCardSaved){ 
   //  props.onDelete(cardID)
-    setIsCardSaved(false)
-   } else{
-  //    props.onSave(cardID)
-     setIsCardSaved(true)}
-  }
+  //  setIsCardSaved(false)
+ //  } else{
+// props.onSave(cardID)
+  //   setIsCardSaved(true)
+//}
+ // }
+function save(){
+  props.onSave(cardID)
+}
+ 
  
   return (
     <li className="card">
@@ -43,7 +48,7 @@ export default function MoviesCard(props) {
                 src={isCardSaved ? saved : notSaved}
               />
             }
-          //  onClick={toggleButtonState(props.key)}
+          onClick={save}
           />
         )}
         <span className="card__duration">{props.duration}</span>

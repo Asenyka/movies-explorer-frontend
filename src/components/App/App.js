@@ -21,7 +21,7 @@ import { getUserCards, deleteUserCard, sendUserCard } from "../../utils/MainApi"
 
 function App() {
   const [isNavigationOpen, setIsNavigationOpen] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
+  const [loggedIn, setLoggedIn] = useState(true);
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
   const[savedCards, setSavedCards] = useState([]);
@@ -34,7 +34,7 @@ function App() {
     if (jwt) {
       const jwt = localStorage.getItem("jwt");
       checkToken(jwt)
-        .then((res) => {
+        .then(() => {
           setLoggedIn(true);
         })
         .catch((err) => {
@@ -70,25 +70,20 @@ function App() {
   function closeNavigation() {
     setIsNavigationOpen(false);
   }
-
+function handleCardSave(cardID){
+const allCards = localStorage.getItem("allCards")
+const cardToSave = JSON.parse(allCards).find(el=>el.id===cardID)
+console.log(cardToSave)
+sendUserCard(cardToSave)
+.then((savedCard)=>{
+ savedCards.append(savedCard)
+})
+.catch((err)=>{
+  console.log(err)
+})
+}
  
 
-
- /* function addSavedProp(cards){
-    savedCards.forEach((el)=>{
-cards.find(el);
-el.saved = true;
-    })
-  }*/
-  function handleRegister(userData) {
-    register(userData)
-      .then((userData) => {
-        setCurrentUser({ userData });
-      })
-      .catch((err) => {
-        console.log(err);
-       });
-  }
 
   function handleLogin(userData) {
     login(userData)
@@ -102,6 +97,17 @@ el.saved = true;
         console.log(err);
       });
   }
+  function handleRegister(userData) {
+    register(userData)
+      .then(() => {
+        navigate("/signin", { replace: true });
+      })
+      .catch((err) => {
+        console.log(err);
+       });
+  }
+
+ 
   function filterItems(arr, query) {
     return arr.filter(
       (el) =>
@@ -138,10 +144,13 @@ el.saved = true;
     setOnSearch(true);
     localStorage.setItem("searchString", string);
     localStorage.setItem("filterState", JSON.stringify(filterState));
+    
     getCards()
       .then((cards) => {
-         //addSavedProp(cards);
         localStorage.setItem("allCards", JSON.stringify(cards));
+        cards.forEach((el) =>
+        {const saved=savedCards.find((item)=>item.id===el.id);
+          saved.saved=true})
         const newCards = filterItems(cards, string);
         localStorage.setItem("searchedCards", JSON.stringify(newCards));
         if (filterState) {
@@ -204,6 +213,7 @@ el.saved = true;
                     onFilterClick={handleFilterClick}
                     onSearch={onSearch}
                     tipText={tipText}
+                    onCardSave={handleCardSave}
                   />
                 }
               />

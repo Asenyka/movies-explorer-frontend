@@ -11,6 +11,7 @@ export default function Movies({
   onSearchSubmit,
   onFilterClick,
   tipText,
+  onCardSave
 }) {
   const [cardsToShow, setCardsToShow] = useState([]);
   const [cardsTotal, setCardsTotal] = useState([])
@@ -40,7 +41,7 @@ export default function Movies({
     return (
       <section className="movies">
         <PageWithMovies onSearchSubmit={onSearchSubmit} onFilterClick={onFilterClick}>
-          <MoviesCardList cards={cardsToShow} forSavedMovies={false} />
+          <MoviesCardList cards={cardsToShow} forSavedMovies={false} onCardSave={onCardSave}/>
         </PageWithMovies>
         {cardsToShow.length < cards.length ? (
           <Button

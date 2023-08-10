@@ -1,13 +1,21 @@
 import Button from "../Button/Button";
 import Form from "../Form/Form";
 import Input from "../Input/Input";
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
+import useFormWithValidation from "../../hooks/useFormWithValidation"
 import CurrentUserContext from "../../contexts/CurrentUserContext";
 export default function Profile(props) {
   const currentUser = useContext(CurrentUserContext);
-  const [inputNameValue, setInputNameValue] = useState(currentUser.name);
-  const [inputEmailValue, setInputEmailValue] = useState(currentUser.email);
   const [isFormButtonInactive, setIsFormButtonInactive] = useState(true);
+  const {values, handleInputChange, resetForm, errors, isValid} = useFormWithValidation();
+  useEffect(()=>{
+    resetForm(currentUser)
+    console.log(currentUser)
+    console.log(resetForm)
+  }, [resetForm, currentUser])
+
+  console.log(values)
+
   function handleEditClick(e) {
     e.preventDefault();
     setIsFormButtonInactive(false);
@@ -20,24 +28,28 @@ export default function Profile(props) {
         heading={`Привет, ${currentUser.name}!`}
         buttonText="Сохранить"
         isFormButtonInactive={isFormButtonInactive}
+        isvalid={isValid}       
       >
         <Input
           form="profile"
           name="name"
           type="text"
-          placeholder="Имя"
+          placeholder="Введите имя"
           label="Имя"
-          value={inputNameValue}
-          onChange={(e) => setInputNameValue(e.target.value)}
+          value={values?values.name:''}
+          onChange={handleInputChange}
+          errors={errors}
+          
         />
         <Input
           form="profile"
           name="email"
           type="email"
-          placeholder="E-mail"
+          placeholder="Введите e-mail"
           label="E-mail"
-          value={inputEmailValue}
-          onChange={(e) => setInputEmailValue(e.target.value)}
+          value={values?values.email:''}
+          onChange={handleInputChange}
+          errors={errors}
         />
       </Form>
       {isFormButtonInactive ? (

@@ -33,8 +33,8 @@ export default function Login(props) {
         buttonText="Войти"
         heading="Рады видеть!"
       >
-        <Input n
-        ame="email" 
+        <Input 
+        name="email" 
         type="email" 
         placeholder="E-mail" 
         label="E-mail"
