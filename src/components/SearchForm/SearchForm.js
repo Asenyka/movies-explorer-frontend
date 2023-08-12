@@ -1,16 +1,18 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import useFormWithValidation from "../../hooks/useFormWithValidation";
 import Form from "../Form/Form";
 import Input from "../Input/Input";
 
 export default function SearchForm(props) {
-const[searchString, setSearchString] = useState('');
 const searchedString = localStorage.getItem("searchString");
-useEffect(()=>{ 
-    setSearchString(searchedString);
- },[])
-function handleSearch(e){
+const {values, handleInputChange, resetForm, errors, isValid} = useFormWithValidation();
+  useEffect(()=>{
+    resetForm(searchedString)
+  }, [resetForm, searchedString])
+
+ function  handleSearch(e){
 e.preventDefault();
-props.onSearchSubmit(searchString)
+props.onSearchSubmit(values.search)
 }
   return (
     <div className="searchform">
@@ -19,6 +21,7 @@ props.onSearchSubmit(searchString)
         name="searchform"
         onSubmit={handleSearch}
         buttonText="Найти"
+        isValid={isValid}
       >
         <Input
           form="searchform"
@@ -27,8 +30,9 @@ props.onSearchSubmit(searchString)
           id="search"
           type="text"
           placeholder="Ключевое слово"
-          value={searchString}
-          onChange={(e) => setSearchString(e.target.value)}
+          value={values}
+          onChange={handleInputChange}
+          errors={errors}
         />
       </Form>
     </div>

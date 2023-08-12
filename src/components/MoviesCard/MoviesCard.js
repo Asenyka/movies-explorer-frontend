@@ -1,27 +1,29 @@
 import saved from "../../images/saved.svg";
 import notSaved from "../../images/not-saved.svg";
 import cardDelete from "../../images/card_delete.svg";
-import { useState } from "react";
+import { useState, useContext, useEffect} from "react";
 import Button from "../Button/Button";
+import CurrentUserContext from "../../contexts/CurrentUserContext";
 
+  
 
 export default function MoviesCard(props) {
-  const [isCardSaved, setIsCardSaved] = useState(props.saved);
-const cardID=props.id;
-
-//  function toggleButtonState() {
-   // if(isCardSaved){ 
-  //  props.onDelete(cardID)
-  //  setIsCardSaved(false)
- //  } else{
-// props.onSave(cardID)
-  //   setIsCardSaved(true)
-//}
- // }
-function save(){
-  props.onSave(cardID)
+  const currentUser = useContext(CurrentUserContext);
+  const [isCardSaved, setIsCardSaved] = useState(false);
+useEffect(()=>{
+  props.owner=currentUser.id?setIsCardSaved(true):''
+}, [props, currentUser]
+)
+function toggleButtonState() {
+   if(isCardSaved){ 
+    props.onDelete(props.id)
+   setIsCardSaved(false)
+ } else{
+ props.onSave(props.id)
+   setIsCardSaved(true)
 }
- 
+ }
+
  
   return (
     <li className="card">
@@ -48,7 +50,7 @@ function save(){
                 src={isCardSaved ? saved : notSaved}
               />
             }
-          onClick={save}
+          onClick={toggleButtonState}
           />
         )}
         <span className="card__duration">{props.duration}</span>

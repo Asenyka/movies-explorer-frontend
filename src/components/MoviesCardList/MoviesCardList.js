@@ -8,7 +8,7 @@ export default function MoviesCardList({ cards, forSavedMovies, onCardSave }) {
           <MoviesCard
           key={card.id}
           id={card.id}
-          saved={card.saved}
+          owner={card.owner}
           nameEN={card.nameEN}
           nameRU={card.nameRU}
           duration={card.duration}

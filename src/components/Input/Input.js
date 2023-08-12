@@ -1,5 +1,5 @@
 
-export default function Input({label, id, type, name, placeholder, form, value, onChange, errors}) {
+export default function Input({label, id, type, name, placeholder, form, value, onChange, errors, pattern}) {
   
   return (
     <div
@@ -17,6 +17,7 @@ export default function Input({label, id, type, name, placeholder, form, value, 
           placeholder={placeholder}
           value={value}
           onChange={onChange}
+          pattern={pattern}
           required
         />
       </label>

@@ -10,11 +10,7 @@ export default function Profile(props) {
   const {values, handleInputChange, resetForm, errors, isValid} = useFormWithValidation();
   useEffect(()=>{
     resetForm(currentUser)
-    console.log(currentUser)
-    console.log(resetForm)
   }, [resetForm, currentUser])
-
-  console.log(values)
 
   function handleEditClick(e) {
     e.preventDefault();
@@ -28,7 +24,7 @@ export default function Profile(props) {
         heading={`Привет, ${currentUser.name}!`}
         buttonText="Сохранить"
         isFormButtonInactive={isFormButtonInactive}
-        isvalid={isValid}       
+        isValid={isValid}       
       >
         <Input
           form="profile"
@@ -39,7 +35,10 @@ export default function Profile(props) {
           value={values?values.name:''}
           onChange={handleInputChange}
           errors={errors}
-          
+          pattern='/^[A-Za-zU+0400–U+04FF -]+$/'
+          minLength={2}
+          maxLength={32}
+
         />
         <Input
           form="profile"
