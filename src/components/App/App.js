@@ -95,9 +95,16 @@ sendUserCard(cardToSave)
   console.log(err)
 })
 }
-function handleCardDelete(cardID){
-  deleteUserCard()
-}
+function handleCardDelete(api_id){
+  console.log(api_id)
+  deleteUserCard(api_id)
+  .then((movies)=>{
+setSavedCards(movies)
+  })
+  .catch((err)=>{
+    console.log(err)})
+  }
+
  
 
 
@@ -155,6 +162,12 @@ function handleCardDelete(cardID){
       handleRepeatedSearch();
     }
   }
+  function handleSearchSavedSubmit(string){
+getUserCards()
+.then((cards)=>{
+
+})
+  }
 
   function handleSearchSubmit(string) {
     setOnSearch(true);
@@ -164,7 +177,7 @@ function handleCardDelete(cardID){
     getCards()
       .then((cards) => {
         cards.forEach((el)=>{
-          const thumbnail=el.image.formats.thumbnail.url;
+        const thumbnail=el.image.formats.thumbnail.url;
         el.image=`https://api.nomoreparties.co/${el.image.url}`;
         el.thumbnail=`https://api.nomoreparties.co/${thumbnail}`;
         el.movieId=el.id;
@@ -224,6 +237,7 @@ function handleCardDelete(cardID){
                     element={SavedMovies}
                    cards={savedCards}
                     loggedIn={loggedIn}
+                    onCardDelete={handleCardDelete}
                   />
                 }
               />
@@ -239,6 +253,7 @@ function handleCardDelete(cardID){
                     onSearch={onSearch}
                     tipText={tipText}
                     onCardSave={handleCardSave}
+                    onCardDelete={handleCardDelete}
                   />
                 }
               />

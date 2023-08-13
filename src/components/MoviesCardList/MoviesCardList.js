@@ -1,6 +1,6 @@
 import MoviesCard from "../MoviesCard/MoviesCard";
 
-export default function MoviesCardList({ cards, forSavedMovies, onCardSave }) {
+export default function MoviesCardList({ cards, forSavedMovies, onCardSave, onCardDelete }) {
   
   return (
     <ul className="card-list" aria-label="Галлерея кинофильмов">
@@ -16,6 +16,8 @@ export default function MoviesCardList({ cards, forSavedMovies, onCardSave }) {
           trailer={card.trailerLink}
           forSavedMovies={forSavedMovies}
           onSave={onCardSave}
+          onDelete={onCardDelete}
+          api_id={card._id||''}
         />
       )
       )}

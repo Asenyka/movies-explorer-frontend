@@ -1,14 +1,13 @@
-import { useEffect } from "react";
 import MoviesCardList from "../MoviesCardList/MoviesCardList";
 import PageWithMovies from "../PageWithMovies/PageWithMovies";
 import Preloader from "../Preloader/Preloader";
 
-export default function SavedMovies({ cards }) {
+export default function SavedMovies({ cards, onFilterClick }) {
 
   if (cards.length !== 0) {
     return (
       <section className="saved-movies">
-        <PageWithMovies>
+        <PageWithMovies onFilterClick={onFilterClick}>
           <MoviesCardList cards={cards} forSavedMovies={true} />
         </PageWithMovies>
       </section>

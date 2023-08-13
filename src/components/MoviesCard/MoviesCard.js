@@ -16,7 +16,7 @@ useEffect(()=>{
 )
 function toggleButtonState() {
    if(isCardSaved){ 
-    props.onDelete(props.id)
+    props.onDelete(props.api_id)
    
  } else{
  props.onSave(props.id)
@@ -39,6 +39,7 @@ function toggleButtonState() {
                 src={cardDelete}
               />
             }
+            onClick={props.onDelete}
           />
         ) : (
           <Button
