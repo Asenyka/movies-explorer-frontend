@@ -30,7 +30,7 @@ props.onSearchSubmit(values.search)
           id="search"
           type="text"
           placeholder="Ключевое слово"
-          value={values}
+          value={values?values.search:""}
           onChange={handleInputChange}
           errors={errors}
         />

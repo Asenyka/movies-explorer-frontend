@@ -17,33 +17,3 @@
         });
         return getJson(res);
       }
-      export async function sendCard(cardData) {
-        const res = await fetch(basePath, {
-          method: "POST",
-          headers: getHeaders(),
-          body: JSON.stringify(cardData),
-        });
-        return getJson(res);
-      }
-      export async function deleteCard(id) {
-        const res = await fetch(basePath, {
-          method: "DELETE",
-          headers: getHeaders(),
-        });
-        return getJson(res);
-      }
-      export async function changeLike(cardID, isLiked) {
-        if (!isLiked) {
-          const res = await fetch(basePath, {
-            method: "PUT",
-            headers: getHeaders(),
-          });
-          return getJson(res);
-        } else {
-          const res = await fetch(basePath, {
-            method: "DELETE",
-            headers: getHeaders(),
-          });
-          return getJson(res);
-        }
-      }

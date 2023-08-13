@@ -11,16 +11,16 @@ export default function MoviesCard(props) {
   const currentUser = useContext(CurrentUserContext);
   const [isCardSaved, setIsCardSaved] = useState(false);
 useEffect(()=>{
-  props.owner=currentUser.id?setIsCardSaved(true):''
+  if(currentUser._id===props.owner&&props.owner!==undefined){setIsCardSaved(true)}
 }, [props, currentUser]
 )
 function toggleButtonState() {
    if(isCardSaved){ 
     props.onDelete(props.id)
-   setIsCardSaved(false)
+   
  } else{
  props.onSave(props.id)
-   setIsCardSaved(true)
+ 
 }
  }
 
@@ -57,7 +57,7 @@ function toggleButtonState() {
       </div>
       <img
         className="card__snapshot"
-        src={`https://api.nomoreparties.co/${props.snapshot}`}
+        src={props.snapshot}
         alt={`Иллюстрация к фильму "${props.nameRU}"`}
       />
     </li>
