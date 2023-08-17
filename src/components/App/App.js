@@ -82,10 +82,7 @@ sendUserCard(cardToSave)
  localStorage.setItem("searchedCards", JSON.stringify(searchedCardsArr));
  getUserCards().
  then((userCards)=>{
-  const savedCardsCopy = userCards;
-  console.log(savedCardsCopy);
-  savedCardsCopy.append(savedCard);
-  setSavedCards(savedCardsCopy);
+  setSavedCards(userCards);
  })
  .catch((err)=>{
   console.log(err)
@@ -96,7 +93,6 @@ sendUserCard(cardToSave)
 })
 }
 function handleCardDelete(api_id){
-  console.log(api_id)
   deleteUserCard(api_id)
   .then((movies)=>{
 setSavedCards(movies)

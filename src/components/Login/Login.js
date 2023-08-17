@@ -7,7 +7,7 @@ import PageWithForm from "../PageWithForm/PageWithForm";
 
 
 export default function Login(props) {
-  const {values, handleInputChange, resetForm, errors, isValid} = useFormWithValidation();
+  const {values, handleInputChange, resetForm, errorMessage, isFormValid} = useFormWithValidation();
   useEffect(()=>{
     resetForm({})
    }, [resetForm])
@@ -32,7 +32,7 @@ export default function Login(props) {
         onSubmit={handleSubmit}
         buttonText="Войти"
         heading="Рады видеть!"
-        isValid={isValid}
+        isValid={isFormValid}
       >
         <Input 
         name="email" 
@@ -40,7 +40,8 @@ export default function Login(props) {
         placeholder="E-mail" 
         label="E-mail"
          onChange={handleInputChange}
-          errors={errors}
+         error={errorMessage}
+         
           />
         <Input
           name="password"
@@ -48,8 +49,9 @@ export default function Login(props) {
           placeholder="Пароль"
           label="Пароль"
           onChange={handleInputChange}
-          errors={errors}
+          error={errorMessage}
           minLength={4}
+        
         />
       </Form>
     </PageWithForm>

@@ -1,6 +1,6 @@
 
-export default function Input({label, id, type, name, placeholder, form, value, onChange, errors, pattern}) {
-  
+export default function Input({label, id, type, name, placeholder, form, value, onChange, error, pattern}) {
+console.log(error)
   return (
     <div
       className={`input input_${form} input_${form}_${name}`}
@@ -15,15 +15,16 @@ export default function Input({label, id, type, name, placeholder, form, value, 
           type={type}
           name={name}
           placeholder={placeholder}
-          value={value}
+          value={value||""}
           onChange={onChange}
           pattern={pattern}
           required
+
         />
       </label>
       <span
         className={`input__error  input__error_${form} input__error_${form}_${name}`}
-      >{errors.name||""}</span>
+      >{error}</span>
     </div>
   );
 }

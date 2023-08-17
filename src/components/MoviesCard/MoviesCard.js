@@ -2,6 +2,7 @@ import saved from "../../images/saved.svg";
 import notSaved from "../../images/not-saved.svg";
 import cardDelete from "../../images/card_delete.svg";
 import { useState, useContext, useEffect} from "react";
+import { Link } from "react-router-dom";
 import Button from "../Button/Button";
 import CurrentUserContext from "../../contexts/CurrentUserContext";
 
@@ -28,7 +29,12 @@ function toggleButtonState() {
   return (
     <li className="card">
       <div className="card__info">
-        <h2 className="card__heading">{props.nameRU}</h2>
+      <Link
+    className="link link_card"
+    to={props.trailer}
+    target="_blank"
+  >        <h2 className="card__heading">{props.nameRU}</h2>
+  </Link>
         {props.forSavedMovies ? (
           <Button
             modifier="saved-movies"
@@ -56,11 +62,17 @@ function toggleButtonState() {
         )}
         <span className="card__duration">{props.duration}</span>
       </div>
+      <Link
+    className="link link_card"
+    to={props.trailer}
+    target="_blank"
+  >
       <img
         className="card__snapshot"
         src={props.snapshot}
         alt={`Иллюстрация к фильму "${props.nameRU}"`}
       />
+      </Link>
     </li>
   );
 }

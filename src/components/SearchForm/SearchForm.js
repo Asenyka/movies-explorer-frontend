@@ -5,14 +5,16 @@ import Input from "../Input/Input";
 
 export default function SearchForm(props) {
 const searchedString = localStorage.getItem("searchString");
-const {values, handleInputChange, resetForm, errors, isValid} = useFormWithValidation();
+const {values, handleInputChange, resetForm, errorMessage, isFormValid } = useFormWithValidation();
+
   useEffect(()=>{
-    resetForm(searchedString)
+    resetForm({searchField:searchedString})
+  
   }, [resetForm, searchedString])
 
  function  handleSearch(e){
 e.preventDefault();
-props.onSearchSubmit(values.search)
+props.onSearchSubmit(values.searchField)
 }
   return (
     <div className="searchform">
@@ -21,18 +23,19 @@ props.onSearchSubmit(values.search)
         name="searchform"
         onSubmit={handleSearch}
         buttonText="Найти"
-        isValid={isValid}
+        isValid={isFormValid}
       >
         <Input
           form="searchform"
-          name="search"
+          name="searchField"
           label=""
           id="search"
           type="text"
           placeholder="Ключевое слово"
-          value={values?values.search:""}
+          value={values.searchField}
           onChange={handleInputChange}
-          errors={errors}
+          error={errorMessage}
+          
         />
       </Form>
     </div>

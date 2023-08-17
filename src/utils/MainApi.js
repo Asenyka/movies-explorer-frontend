@@ -75,7 +75,7 @@ function getJson(res) {
         return getJson(res);
       }
       export async function deleteUserCard(id) {
-        const res = await fetch(`${basePath}/movies/:${id}`, {
+        const res = await fetch(`${basePath}/movies/${id}`, {
           method: "DELETE",
           headers: getHeaders(),
         });
