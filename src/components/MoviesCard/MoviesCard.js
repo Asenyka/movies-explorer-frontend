@@ -13,12 +13,19 @@ export default function MoviesCard(props) {
   const [isCardSaved, setIsCardSaved] = useState(false);
   
 useEffect(()=>{
-  console.log(props.api_id)
 if(currentUser._id===props.owner&&props.owner!==undefined){setIsCardSaved(true)}else{
   setIsCardSaved(false)
 }
 }, [props, currentUser]
 )
+function padTo2Digits(num) {
+  return num.toString().padStart(2, '0');
+}
+function toHoursAndMinutes(min){
+  const m = min % 60;
+  const h = Math.floor(min /60);
+  return `${padTo2Digits(h)} ч ${padTo2Digits(m)} м`;
+}
 function toggleButtonState() {
    if(isCardSaved){ 
     props.onDelete(props.api_id);
@@ -65,7 +72,7 @@ function deleteCard(){
           onClick={toggleButtonState}
           />
         )}
-        <span className="card__duration">{props.duration}</span>
+        <span className="card__duration">{toHoursAndMinutes(props.duration)}</span>
       </div>
       <Link
     className="link link_card"

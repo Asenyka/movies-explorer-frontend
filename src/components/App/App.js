@@ -73,6 +73,8 @@ function App() {
   function closeNavigation() {
     setIsNavigationOpen(false);
   }
+  
+
 function handleCardSave(cardID){
 const searchedCards = localStorage.getItem("searchedCards");
 const searchedCardsArr = JSON.parse(searchedCards)
