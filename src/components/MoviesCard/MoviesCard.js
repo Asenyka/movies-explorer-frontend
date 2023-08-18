@@ -11,19 +11,24 @@ import CurrentUserContext from "../../contexts/CurrentUserContext";
 export default function MoviesCard(props) {
   const currentUser = useContext(CurrentUserContext);
   const [isCardSaved, setIsCardSaved] = useState(false);
+  
 useEffect(()=>{
-  if(currentUser._id===props.owner&&props.owner!==undefined){setIsCardSaved(true)}
+  console.log(props.api_id)
+if(currentUser._id===props.owner&&props.owner!==undefined){setIsCardSaved(true)}else{
+  setIsCardSaved(false)
+}
 }, [props, currentUser]
 )
 function toggleButtonState() {
    if(isCardSaved){ 
-    props.onDelete(props.api_id)
-   
+    props.onDelete(props.api_id);
  } else{
  props.onSave(props.id)
- 
 }
  }
+function deleteCard(){
+  props.onDelete(props.api_id)
+}
 
  
   return (
@@ -45,7 +50,7 @@ function toggleButtonState() {
                 src={cardDelete}
               />
             }
-            onClick={props.onDelete}
+            onClick={deleteCard}
           />
         ) : (
           <Button

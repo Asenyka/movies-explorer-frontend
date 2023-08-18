@@ -41,7 +41,7 @@ function App() {
           console.log(err);
         });
     }
-  }, []);
+  }, [jwt]);
 
   useEffect(() => {
     if (loggedIn) {
@@ -51,19 +51,22 @@ function App() {
         })
         .catch((err) => {
           console.log(err);
-        });
+        })}}, [loggedIn]);
+
+  useEffect(() =>{
         getUserCards()
         .then((userCards)=>{
-          if(userCards){
-                 setSavedCards(userCards)
-          }
+                  const ownCards = userCards.filter(el=>el.owner===currentUser._id)
+                 setSavedCards(ownCards);
+          
         })
         .catch((err)=>{
           console.log(err)
         })
-    }
-  }, [loggedIn]);
-
+  }, [currentUser]);
+  function setCardsToLS(cards){
+    localStorage.setItem("searchedCards", JSON.stringify(cards));
+  }
   function openNavigation() {
     setIsNavigationOpen(true);
   }
@@ -79,10 +82,12 @@ sendUserCard(cardToSave)
  const cardIndex=searchedCardsArr.findIndex((el)=>el.movieId===savedCard.movieId);
  searchedCardsArr[cardIndex]=savedCard;
  setCards(searchedCardsArr);
- localStorage.setItem("searchedCards", JSON.stringify(searchedCardsArr));
+ setCardsToLS(searchedCardsArr);
  getUserCards().
  then((userCards)=>{
-  setSavedCards(userCards);
+  const ownCards = userCards.filter(el=>el.owner===currentUser._id)
+  setSavedCards(ownCards);
+  console.log(ownCards)
  })
  .catch((err)=>{
   console.log(err)
@@ -92,16 +97,30 @@ sendUserCard(cardToSave)
   console.log(err)
 })
 }
+
+
 function handleCardDelete(api_id){
   deleteUserCard(api_id)
-  .then((movies)=>{
-setSavedCards(movies)
+  .then((userCards)=>{
+    const ownCards = userCards.filter(el=>el.owner===currentUser._id)
+  setSavedCards(ownCards);
+const searchedCards = localStorage.getItem("searchedCards");
+if(searchedCards){
+const cardsArr=JSON.parse(searchedCards);
+const cardToDelete = cardsArr.find(el=>el._id===api_id);
+const cardIndex = cardsArr.findIndex(el=>el._id===api_id);
+delete cardToDelete._id;
+delete cardToDelete.owner;
+delete cardToDelete.__v;
+cardsArr[cardIndex]=cardToDelete;
+setCards(cardsArr);
+setCardsToLS(cardsArr);
+} 
   })
   .catch((err)=>{
     console.log(err)})
   }
 
- 
 
 
   function handleLogin(userData) {
@@ -143,7 +162,7 @@ setSavedCards(movies)
     const searchedCards = filterItems(JSON.parse(cards), searchString);
     setCards(searchedCards);
     localStorage.setItem("filterState", JSON.stringify(false));
-    localStorage.setItem("searchedCards", JSON.stringify(searchedCards));
+    setCardsToLS(searchedCards);
   }
   function handleFilterClick(state) {
     setFilterState(state);
@@ -183,9 +202,12 @@ getUserCards()
      })
         localStorage.setItem("allCards", JSON.stringify(cards));
         cards.forEach((el) =>{
-       if(savedCards.includes((item)=>item.movieId===el.moviesId)){
-          el.owner=currentUser._id}})
-        const newCards = filterItems(cards, string);
+       if(savedCards.includes((item)=>item.movieId===el.movieId)){
+   //       el.owner=currentUser._id;
+el.remove()}})
+const cardsAndSavedCards = cards.concat(savedCards);
+
+        const newCards = filterItems(cardsAndSavedCards, string);
         localStorage.setItem("searchedCards", JSON.stringify(newCards));
         if (filterState) {
           const shortFilms = filterDuration(newCards);

@@ -7,7 +7,7 @@ import CurrentUserContext from "../../contexts/CurrentUserContext";
 export default function Profile(props) {
   const currentUser = useContext(CurrentUserContext);
   const [isFormButtonInactive, setIsFormButtonInactive] = useState(true);
-  const {values, handleInputChange, resetForm, errorMessage, isFormValid, isInputValid} = useFormWithValidation();
+  const {values, handleInputChange, resetForm, errorMessage, isFormValid} = useFormWithValidation();
   //const nameRegEx=/^[A-Za-zU+0400–U+04FF -]+$/
   
   useEffect(()=>{
@@ -40,7 +40,7 @@ export default function Profile(props) {
         //  pattern={nameRegEx.source}
           minLength={2}
           maxLength={32}
-          isValid = {isInputValid}
+      
 
         />
         <Input
@@ -52,7 +52,7 @@ export default function Profile(props) {
           value={values?values.email:''}
           onChange={handleInputChange}
           error={errorMessage}
-          isValid = {isInputValid}
+     
           />
       </Form>
       {isFormButtonInactive ? (

@@ -41,6 +41,7 @@ export default function Login(props) {
         label="E-mail"
          onChange={handleInputChange}
          error={errorMessage}
+         value={values.email||''}
          
           />
         <Input
@@ -51,7 +52,7 @@ export default function Login(props) {
           onChange={handleInputChange}
           error={errorMessage}
           minLength={4}
-        
+          value={values.password||''}
         />
       </Form>
     </PageWithForm>
