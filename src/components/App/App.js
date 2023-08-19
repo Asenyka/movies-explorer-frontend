@@ -17,14 +17,18 @@ import ProtectedRouteElement from "../PotectedRouteElement";
 import { getUserInfo } from "../../utils/MainApi";
 import { getCards } from "../../utils/MoviesApi";
 import { login, register, checkToken } from "../../utils/MainApi";
-import { getUserCards, deleteUserCard, sendUserCard } from "../../utils/MainApi";
+import {
+  getUserCards,
+  deleteUserCard,
+  sendUserCard,
+} from "../../utils/MainApi";
 
 function App() {
   const [isNavigationOpen, setIsNavigationOpen] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
-  const[savedCards, setSavedCards] = useState([]);
+  const [savedCards, setSavedCards] = useState([]);
   const [filterState, setFilterState] = useState(false);
   const [onSearch, setOnSearch] = useState(false);
   const [tipText, setTipText] = useState("");
@@ -45,26 +49,27 @@ function App() {
 
   useEffect(() => {
     if (loggedIn) {
-       getUserInfo()
+      getUserInfo()
         .then((user) => {
           setCurrentUser(user.user);
         })
         .catch((err) => {
           console.log(err);
-        })}}, [loggedIn]);
+        });
+    }
+  }, [loggedIn]);
 
-  useEffect(() =>{
-        getUserCards()
-        .then((userCards)=>{
-                  const ownCards = userCards.filter(el=>el.owner===currentUser._id)
-                 setSavedCards(ownCards);
-          
-        })
-        .catch((err)=>{
-          console.log(err)
-        })
+  useEffect(() => {
+    getUserCards()
+      .then((userCards) => {
+        const ownCards = userCards.filter((el) => el.owner === currentUser._id);
+        setSavedCards(ownCards);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }, [currentUser]);
-  function setCardsToLS(cards){
+  function setCardsToLS(cards) {
     localStorage.setItem("searchedCards", JSON.stringify(cards));
   }
   function openNavigation() {
@@ -73,57 +78,58 @@ function App() {
   function closeNavigation() {
     setIsNavigationOpen(false);
   }
-  
 
-function handleCardSave(cardID){
-const searchedCards = localStorage.getItem("searchedCards");
-const searchedCardsArr = JSON.parse(searchedCards)
-const cardToSave = searchedCardsArr.find(el=>el.movieId===cardID)
-sendUserCard(cardToSave)
-.then((savedCard)=>{
- const cardIndex=searchedCardsArr.findIndex((el)=>el.movieId===savedCard.movieId);
- searchedCardsArr[cardIndex]=savedCard;
- setCards(searchedCardsArr);
- setCardsToLS(searchedCardsArr);
- getUserCards().
- then((userCards)=>{
-  const ownCards = userCards.filter(el=>el.owner===currentUser._id)
-  setSavedCards(ownCards);
-  console.log(ownCards)
- })
- .catch((err)=>{
-  console.log(err)
-})
-})
-.catch((err)=>{
-  console.log(err)
-})
-}
-
-
-function handleCardDelete(api_id){
-  deleteUserCard(api_id)
-  .then((userCards)=>{
-    const ownCards = userCards.filter(el=>el.owner===currentUser._id)
-  setSavedCards(ownCards);
-const searchedCards = localStorage.getItem("searchedCards");
-if(searchedCards){
-const cardsArr=JSON.parse(searchedCards);
-const cardToDelete = cardsArr.find(el=>el._id===api_id);
-const cardIndex = cardsArr.findIndex(el=>el._id===api_id);
-delete cardToDelete._id;
-delete cardToDelete.owner;
-delete cardToDelete.__v;
-cardsArr[cardIndex]=cardToDelete;
-setCards(cardsArr);
-setCardsToLS(cardsArr);
-} 
-  })
-  .catch((err)=>{
-    console.log(err)})
+  function handleCardSave(cardID) {
+    const searchedCards = localStorage.getItem("searchedCards");
+    const searchedCardsArr = JSON.parse(searchedCards);
+    const cardToSave = searchedCardsArr.find((el) => el.movieId === cardID);
+    sendUserCard(cardToSave)
+      .then((savedCard) => {
+        const cardIndex = searchedCardsArr.findIndex(
+          (el) => el.movieId === savedCard.movieId
+        );
+        searchedCardsArr[cardIndex] = savedCard;
+        setCards(searchedCardsArr);
+        setCardsToLS(searchedCardsArr);
+        getUserCards()
+          .then((userCards) => {
+            const ownCards = userCards.filter(
+              (el) => el.owner === currentUser._id
+            );
+            setSavedCards(ownCards);
+            console.log(ownCards);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 
-
+  function handleCardDelete(api_id) {
+    deleteUserCard(api_id)
+      .then((userCards) => {
+        const ownCards = userCards.filter((el) => el.owner === currentUser._id);
+        setSavedCards(ownCards);
+        const searchedCards = localStorage.getItem("searchedCards");
+        if (searchedCards) {
+          const cardsArr = JSON.parse(searchedCards);
+          const cardToDelete = cardsArr.find((el) => el._id === api_id);
+          const cardIndex = cardsArr.findIndex((el) => el._id === api_id);
+          delete cardToDelete._id;
+          delete cardToDelete.owner;
+          delete cardToDelete.__v;
+          cardsArr[cardIndex] = cardToDelete;
+          setCards(cardsArr);
+          setCardsToLS(cardsArr);
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
 
   function handleLogin(userData) {
     login(userData)
@@ -144,10 +150,9 @@ setCardsToLS(cardsArr);
       })
       .catch((err) => {
         console.log(err);
-       });
+      });
   }
 
- 
   function filterItems(arr, query) {
     return arr.filter(
       (el) =>
@@ -158,65 +163,74 @@ setCardsToLS(cardsArr);
   function filterDuration(arr) {
     return arr.filter((el) => el.duration <= 40);
   }
-  function handleRepeatedSearch() {
+  
+  function handleFilterClick(state) {
+ 
+    setFilterState(state);
+    localStorage.setItem("filterState", JSON.stringify(state));
     const cards = localStorage.getItem("allCards");
     const searchString = localStorage.getItem("searchString");
     const searchedCards = filterItems(JSON.parse(cards), searchString);
-    setCards(searchedCards);
-    localStorage.setItem("filterState", JSON.stringify(false));
-    setCardsToLS(searchedCards);
-  }
-  function handleFilterClick(state) {
-    setFilterState(state);
-    if (state === true) {
-     const allCards = localStorage.getItem("allCards");
-      const filteredCards = filterDuration(JSON.parse(allCards));
+    
+       if(state){
+        
+        const filteredCards = filterDuration(searchedCards);
       setCards(filteredCards);
-      localStorage.setItem("searchedCards", JSON.stringify(filteredCards));
-      localStorage.setItem("filterState", JSON.stringify(state));
-
+      setCardsToLS(filteredCards);
+     
     } else {
-      handleRepeatedSearch();
+      setCards(searchedCards);
+      setCardsToLS(searchedCards);
     }
   }
-  function handleSearchSavedSubmit(string){
-getUserCards()
-.then((cards)=>{
-
-})
+  function handleSearchSavedSubmit(string) {
+    const newCards = filterItems(savedCards, string);
+    if (filterState) {
+      const shortFilms = filterDuration(newCards);
+      if (shortFilms.length !== 0) {
+        setSavedCards(shortFilms);
+      } else {
+        setTipText("Ничего не найдено");
+      }
+    } else {
+      if (newCards.length !== 0) {
+        setSavedCards(newCards);
+      } else {
+        setTipText("Ничего не найдено");
+      }
+    }
   }
 
   function handleSearchSubmit(string) {
     setOnSearch(true);
     localStorage.setItem("searchString", string);
     localStorage.setItem("filterState", JSON.stringify(filterState));
-    
+
     getCards()
       .then((cards) => {
-        cards.forEach((el)=>{
-        const thumbnail=el.image.formats.thumbnail.url;
-        el.image=`https://api.nomoreparties.co/${el.image.url}`;
-        el.thumbnail=`https://api.nomoreparties.co/${thumbnail}`;
-        el.movieId=el.id;
-        delete el.id;
-        delete el.created_at;
-        delete el.updated_at;
-     })
+        cards.forEach((el) => {
+          const thumbnail = el.image.formats.thumbnail.url;
+          el.image = `https://api.nomoreparties.co/${el.image.url}`;
+          el.thumbnail = `https://api.nomoreparties.co/${thumbnail}`;
+          el.movieId = el.id;
+          delete el.id;
+          delete el.created_at;
+          delete el.updated_at;
+        });
         localStorage.setItem("allCards", JSON.stringify(cards));
-        cards.forEach((el) =>{
-       if(savedCards.includes((item)=>item.movieId===el.movieId)){
-   //       el.owner=currentUser._id;
-el.remove()}})
-const cardsAndSavedCards = cards.concat(savedCards);
-
+        cards.forEach((el) => {
+          if (savedCards.includes((item) => item.movieId === el.movieId)) {
+            el.remove();
+          }
+        });
+        const cardsAndSavedCards = cards.concat(savedCards);
         const newCards = filterItems(cardsAndSavedCards, string);
         localStorage.setItem("searchedCards", JSON.stringify(newCards));
         if (filterState) {
           const shortFilms = filterDuration(newCards);
-
           if (shortFilms.length !== 0) {
             setCards(shortFilms);
-            localStorage.setItem("searchedCards", JSON.stringify(shortFilms))
+            localStorage.setItem("searchedCards", JSON.stringify(shortFilms));
           } else {
             setTipText("Ничего не найдено");
           }
@@ -238,69 +252,70 @@ const cardsAndSavedCards = cards.concat(savedCards);
   function handleCheckOut() {
     localStorage.clear();
     setLoggedIn(false);
-    navigate('/signin')
+    navigate("/signin");
   }
 
-
   return (
-        <CurrentUserContext.Provider value={currentUser || ""}>
-        <div className="App">
-          <Header onOpenNavigation={openNavigation} loggedIn={loggedIn} />
-          <main>
-            <Routes>
-              <Route path="/" element={<Main />} />
+    <CurrentUserContext.Provider value={currentUser || ""}>
+      <div className="App">
+        <Header onOpenNavigation={openNavigation} loggedIn={loggedIn} />
+        <main>
+          <Routes>
+            <Route path="/" element={<Main />} />
 
-              <Route
-                path="/saved-movies"
-                element={
-                  <ProtectedRouteElement
-                    element={SavedMovies}
-                   cards={savedCards}
-                    loggedIn={loggedIn}
-                    onCardDelete={handleCardDelete}
-                  />
-                }
-              />
-              <Route
-                path="/movies"
-                element={
-                  <ProtectedRouteElement
-                    element={Movies}
-                   cards={cards}
-                    loggedIn={loggedIn}
-                    onSearchSubmit={handleSearchSubmit}
-                    onFilterClick={handleFilterClick}
-                    onSearch={onSearch}
-                    tipText={tipText}
-                    onCardSave={handleCardSave}
-                    onCardDelete={handleCardDelete}
-                  />
-                }
-              />
+            <Route
+              path="/saved-movies"
+              element={
+                <ProtectedRouteElement
+                  element={SavedMovies}
+                  cards={savedCards}
+                  loggedIn={loggedIn}
+                  onCardDelete={handleCardDelete}
+                  onSearchSubmit={handleSearchSavedSubmit}
+                  onFilterClick={handleFilterClick}
+                />
+              }
+            />
+            <Route
+              path="/movies"
+              element={
+                <ProtectedRouteElement
+                  element={Movies}
+                  cards={cards}
+                  loggedIn={loggedIn}
+                  onSearchSubmit={handleSearchSubmit}
+                  onFilterClick={handleFilterClick}
+                  onSearch={onSearch}
+                  tipText={tipText}
+                  onCardSave={handleCardSave}
+                  onCardDelete={handleCardDelete}
+                />
+              }
+            />
 
-              <Route
-                path="/profile"
-                element={
-                  <ProtectedRouteElement
-                    element={Profile}
-                    user={currentUser}
-                    loggedIn={loggedIn}
-                    onCheckout={handleCheckOut}
-                  />
-                }
-              />
-              <Route path="/signin" element={<Login onLogin={handleLogin} />} />
-              <Route
-                path="/signup"
-                element={<Register onRegister={handleRegister} />}
-              />
-            </Routes>
-            <ErrorPage />
-            <Navigation isOpen={isNavigationOpen} onClose={closeNavigation} />
-          </main>
-          <Footer />
-        </div>
-      </CurrentUserContext.Provider>
+            <Route
+              path="/profile"
+              element={
+                <ProtectedRouteElement
+                  element={Profile}
+                  user={currentUser}
+                  loggedIn={loggedIn}
+                  onCheckout={handleCheckOut}
+                />
+              }
+            />
+            <Route path="/signin" element={<Login onLogin={handleLogin} />} />
+            <Route
+              path="/signup"
+              element={<Register onRegister={handleRegister} />}
+            />
+          </Routes>
+          <ErrorPage />
+          <Navigation isOpen={isNavigationOpen} onClose={closeNavigation} />
+        </main>
+        <Footer />
+      </div>
+    </CurrentUserContext.Provider>
   );
 }
 

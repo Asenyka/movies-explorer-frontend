@@ -2,13 +2,21 @@ import { useEffect, useState } from "react";
 
 export default function FilterCheckbox(props) {
   const [filterChecked, setFilterChecked] = useState(false);
+  const [savedFilterChecked, setSavedFilterChecked]=useState(false);
   const searchedFilterState = localStorage.getItem("filterState");
+  
   useEffect(()=>{
-    setFilterChecked(JSON.parse(searchedFilterState))
+    props.forSavedMovies?setFilterChecked(false):setFilterChecked(JSON.parse(searchedFilterState))
   }, [])
+  
   function handleFilterClick(){
+    if(props.forSavedMovies){
+      setSavedFilterChecked(!savedFilterChecked);
+      props.onClick(!savedFilterChecked);
+    }else{
     setFilterChecked(!filterChecked);
     props.onClick(!filterChecked);
+    }
    }
     return (
     <div className="filter">
@@ -18,7 +26,7 @@ export default function FilterCheckbox(props) {
         name="checkbox"
         type="checkbox"
        onChange={handleFilterClick}
-       checked={filterChecked}
+       checked={props.forSavedMovies?savedFilterChecked:filterChecked}
       />
       <label htmlFor="checkbox" className="filter__name">
         Короткометражки
