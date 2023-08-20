@@ -5,11 +5,10 @@ import Input from "../Input/Input";
 
 export default function SearchForm(props) {
 const searchedString = localStorage.getItem("searchString");
-const {values, handleInputChange, resetForm, errorMessage, isFormValid } = useFormWithValidation();
+const {values, handleInputChange, resetForm, errors, isFormValid } = useFormWithValidation();
 
   useEffect(()=>{
     resetForm(props.forSavedMovies?{}:{searchField:searchedString})
-  
   }, [])
 
  function  handleSearch(e){
@@ -34,7 +33,7 @@ props.onSearchSubmit(values.searchField)
           placeholder="Ключевое слово"
           value={values.searchField||''}
           onChange={handleInputChange}
-          error={errorMessage}
+          error={errors.searchField}
           
         />
       </Form>

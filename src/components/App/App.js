@@ -76,8 +76,8 @@ function App() {
       }) 
   }, []);
   
-  function setCardsToLS(cards) {
-    localStorage.setItem("searchedCards", JSON.stringify(cards));
+  function setCardsToLS(cardsToSave) {
+    localStorage.setItem("searchedCards", JSON.stringify(cardsToSave));
   }
   function openNavigation() {
     setIsNavigationOpen(true);
@@ -344,8 +344,9 @@ setCurrentUser(user)
               path="/signup"
               element={<Register onRegister={handleRegister} />}
             />
+            <Route path="*" element={<ErrorPage/>}/>
           </Routes>
-          <ErrorPage />
+          
           <Navigation isOpen={isNavigationOpen} onClose={closeNavigation} />
         </main>
         <Footer />

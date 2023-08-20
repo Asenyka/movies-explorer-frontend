@@ -7,7 +7,7 @@ import PageWithForm from "../PageWithForm/PageWithForm";
 
 
 export default function Login(props) {
-  const {values, handleInputChange, resetForm, errorMessage, isFormValid} = useFormWithValidation();
+  const {values, handleInputChange, resetForm, errors, isFormValid} = useFormWithValidation();
   useEffect(()=>{
     resetForm({})
    }, [resetForm])
@@ -40,7 +40,7 @@ export default function Login(props) {
         placeholder="E-mail" 
         label="E-mail"
          onChange={handleInputChange}
-         error={errorMessage}
+         error={errors.email}
          value={values.email||''}
          
           />
@@ -50,7 +50,7 @@ export default function Login(props) {
           placeholder="Пароль"
           label="Пароль"
           onChange={handleInputChange}
-          error={errorMessage}
+          error={errors.password}
           minLength={4}
           value={values.password||''}
         />

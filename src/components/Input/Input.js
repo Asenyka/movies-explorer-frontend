@@ -1,6 +1,6 @@
 
-export default function Input({label, disabled, id, type, name, placeholder, form, value, onChange, error, pattern}) {
-console.log(error)
+export default function Input({label, minLength, maxLength, disabled, id, type, name, placeholder, form, value, onChange, error, pattern}) {
+
   return (
     <div
       className={`input input_${form} input_${form}_${name}`}
@@ -17,9 +17,11 @@ console.log(error)
           placeholder={placeholder}
           value={value||""}
           onChange={onChange}
-          pattern={pattern}
           required
           disabled={disabled}
+          minLength={minLength}
+          maxLength={maxLength}
+
         />
       </label>
       <span

@@ -27,7 +27,7 @@ export default function Movies({
      setCardsTotal(cards);
     } else {
       const previousCards = JSON.parse(searchedCards);
-      if (previousCards){
+      if (previousCards.length!==0){
       setCardsToShow(previousCards.slice(0, cardNumber));
      setCardsTotal(previousCards);
     }}
@@ -38,13 +38,13 @@ export default function Movies({
     setCardsToShow(cardsTotal.slice(0, newCardNumber));
   }
 
-  if (cardsToShow.length !== 0) {
+  if (cardsToShow.length !==0) {
     return (
       <section className="movies">
         <PageWithMovies onSearchSubmit={onSearchSubmit} onFilterClick={onFilterClick}>
           <MoviesCardList cards={cardsToShow} forSavedMovies={false} onCardSave={onCardSave} onCardDelete={onCardDelete}/>
         </PageWithMovies>
-        {cardsToShow.length < cards.length ? (
+        {cardsToShow.length < cardsTotal.length ? (
           <Button
             buttonText="Ещё"
             modifier="movies_more"

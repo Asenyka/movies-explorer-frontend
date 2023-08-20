@@ -29,6 +29,7 @@ return false
           props.isValid?`form button_form_${props.name}`:
           `form button_form_${props.name} button_form_inactive`
         }
+        disabled={!props.isValid?true:false}
       />
     </form>
   );

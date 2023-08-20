@@ -105,6 +105,10 @@
 .button_form_inactive {
   opacity:0.5;
 }
+.button_form_inactive:hover{
+  opacity:0.5;
+}
+
 .button_form_login {
   margin-top: 309px;
 }

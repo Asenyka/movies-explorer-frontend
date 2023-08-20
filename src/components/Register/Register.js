@@ -6,7 +6,7 @@ import Input from "../Input/Input";
 import PageWithForm from "../PageWithForm/PageWithForm";
 
 export default function Register(props) {
-  const {values, handleInputChange, resetForm, errorMessage, isFormValid} = useFormWithValidation();
+  const {values, handleInputChange, resetForm, errors, isFormValid} = useFormWithValidation();
   useEffect(()=>{
     resetForm({})
   }, [resetForm])
@@ -37,7 +37,7 @@ export default function Register(props) {
           placeholder="Имя"
           label="Имя"
           onChange={handleInputChange}
-          error={errorMessage}
+          error={errors.name}
           pattern={`$^[A-Za-zU+0400–U+04FF -]+$`}
           minLength={2}
           maxLength={32}
@@ -49,7 +49,7 @@ export default function Register(props) {
           placeholder="E-mail"
           label="E-mail"
           onChange={handleInputChange}
-          error={errorMessage}
+          error={errors.email}
       
         />
         <Input
@@ -59,7 +59,7 @@ export default function Register(props) {
           placeholder="Пароль"
           label="Пароль"
           onChange={handleInputChange}
-          error={errorMessage}
+          error={errors.password}
           minLength={4}
         
         />
