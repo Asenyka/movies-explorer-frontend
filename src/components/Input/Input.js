@@ -1,5 +1,5 @@
 
-export default function Input({label, id, type, name, placeholder, form, value, onChange, error, pattern}) {
+export default function Input({label, disabled, id, type, name, placeholder, form, value, onChange, error, pattern}) {
 console.log(error)
   return (
     <div
@@ -19,7 +19,7 @@ console.log(error)
           onChange={onChange}
           pattern={pattern}
           required
-
+          disabled={disabled}
         />
       </label>
       <span

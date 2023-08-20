@@ -14,7 +14,7 @@ import Profile from "../Profile/Profile";
 import Navigation from "../Navigation/Navigation";
 import ErrorPage from "../ErrorPage/ErrorPage";
 import ProtectedRouteElement from "../PotectedRouteElement";
-import { getUserInfo } from "../../utils/MainApi";
+import { getUserInfo, sendUserInfo} from "../../utils/MainApi";
 import { getCards } from "../../utils/MoviesApi";
 import { login, register, checkToken } from "../../utils/MainApi";
 import {
@@ -31,9 +31,14 @@ function App() {
   const [savedCards, setSavedCards] = useState([]);
   const [filterState, setFilterState] = useState(false);
   const [onSearch, setOnSearch] = useState(false);
+  const[onSavedSearch, setOnSavedSearch]=useState(false)
   const [tipText, setTipText] = useState("");
+  const [savedTipText, setSavedTipText]=useState('');
+  const [savedSearchString, setSavedSearchString] = useState("");
   const navigate = useNavigate();
   const jwt = localStorage.getItem("jwt");
+
+ 
   useEffect(() => {
     if (jwt) {
       const jwt = localStorage.getItem("jwt");
@@ -61,14 +66,16 @@ function App() {
 
   useEffect(() => {
     getUserCards()
-      .then((userCards) => {
-        const ownCards = userCards.filter((el) => el.owner === currentUser._id);
-        setSavedCards(ownCards);
-      })
+    .then((userCards) => {
+      setSavedCards(userCards)})
       .catch((err) => {
-        console.log(err);
-      });
-  }, [currentUser]);
+        setSavedTipText(
+          "Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз."
+        );
+        console.log(err)   
+      }) 
+  }, []);
+  
   function setCardsToLS(cards) {
     localStorage.setItem("searchedCards", JSON.stringify(cards));
   }
@@ -92,17 +99,15 @@ function App() {
         setCards(searchedCardsArr);
         setCardsToLS(searchedCardsArr);
         getUserCards()
-          .then((userCards) => {
-            const ownCards = userCards.filter(
-              (el) => el.owner === currentUser._id
-            );
-            setSavedCards(ownCards);
-            console.log(ownCards);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-      })
+    .then((userCards) => {
+      setSavedCards(userCards)})
+      .catch((err) => {
+        setSavedTipText(
+          "Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз."
+        );
+        console.log(err)   
+      }) 
+    })
       .catch((err) => {
         console.log(err);
       });
@@ -111,8 +116,7 @@ function App() {
   function handleCardDelete(api_id) {
     deleteUserCard(api_id)
       .then((userCards) => {
-        const ownCards = userCards.filter((el) => el.owner === currentUser._id);
-        setSavedCards(ownCards);
+        setSavedCards(userCards);
         const searchedCards = localStorage.getItem("searchedCards");
         if (searchedCards) {
           const cardsArr = JSON.parse(searchedCards);
@@ -163,27 +167,46 @@ function App() {
   function filterDuration(arr) {
     return arr.filter((el) => el.duration <= 40);
   }
-  
+
   function handleFilterClick(state) {
- 
     setFilterState(state);
     localStorage.setItem("filterState", JSON.stringify(state));
     const cards = localStorage.getItem("allCards");
     const searchString = localStorage.getItem("searchString");
     const searchedCards = filterItems(JSON.parse(cards), searchString);
-    
-       if(state){
-        
-        const filteredCards = filterDuration(searchedCards);
+
+    if (state) {
+      const filteredCards = filterDuration(searchedCards);
       setCards(filteredCards);
       setCardsToLS(filteredCards);
-     
     } else {
       setCards(searchedCards);
       setCardsToLS(searchedCards);
     }
   }
+  function handleSavedFilterClick(state) {
+        setFilterState(state);
+        getUserCards()
+        .then((userCards) => {
+          const searchedCards = filterItems(userCards, savedSearchString);
+          if (state) {
+            const filteredCards = filterDuration(searchedCards);
+            setSavedCards(filteredCards);
+          } else {
+            setSavedCards(searchedCards);
+          }
+        })
+          .catch((err) => {
+            setSavedTipText(
+              "Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз."
+            );
+            console.log(err)   
+          })
+        
+  }
   function handleSearchSavedSubmit(string) {
+    setOnSavedSearch(true)
+    setSavedSearchString(string);
     const newCards = filterItems(savedCards, string);
     if (filterState) {
       const shortFilms = filterDuration(newCards);
@@ -249,6 +272,15 @@ function App() {
         console.log(err);
       });
   }
+  function handleEditUserData(userData){
+ sendUserInfo(userData)
+ .then((user)=>{
+setCurrentUser(user)
+ })
+ .catch((err)=>{
+  console.log(err)
+ })
+  }
   function handleCheckOut() {
     localStorage.clear();
     setLoggedIn(false);
@@ -272,7 +304,9 @@ function App() {
                   loggedIn={loggedIn}
                   onCardDelete={handleCardDelete}
                   onSearchSubmit={handleSearchSavedSubmit}
-                  onFilterClick={handleFilterClick}
+                  onFilterClick={handleSavedFilterClick}
+                  onSearch={onSavedSearch}
+                  tipText={savedTipText}
                 />
               }
             />
@@ -301,6 +335,7 @@ function App() {
                   user={currentUser}
                   loggedIn={loggedIn}
                   onCheckout={handleCheckOut}
+                  onSubmit={handleEditUserData}
                 />
               }
             />

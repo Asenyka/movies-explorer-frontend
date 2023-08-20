@@ -6,9 +6,13 @@ import useFormWithValidation from "../../hooks/useFormWithValidation"
 import CurrentUserContext from "../../contexts/CurrentUserContext";
 export default function Profile(props) {
   const currentUser = useContext(CurrentUserContext);
-  const [isFormButtonInactive, setIsFormButtonInactive] = useState(true);
   const {values, handleInputChange, resetForm, errorMessage, isFormValid} = useFormWithValidation();
-  //const nameRegEx=/^[A-Za-zU+0400–U+04FF -]+$/
+  const [isDisabled, setIsDisabled] =useState(true)
+  const [isEditFormValid, setIsEditFormValid]=useState(false)
+  
+  const [isFormButtonInvisible, setIsFormButtonInvisible] = useState(true);
+  
+
   
   useEffect(()=>{
     resetForm(currentUser)
@@ -16,7 +20,21 @@ export default function Profile(props) {
 
   function handleEditClick(e) {
     e.preventDefault();
-    setIsFormButtonInactive(false);
+    setIsFormButtonInvisible(false);
+    setIsDisabled(false);
+  }
+  function handleChange(e){
+    handleInputChange(e);
+    if(values.name !== currentUser.name || values.email !== currentUser.email){
+  isFormValid?setIsEditFormValid(true):setIsEditFormValid(false)}else{
+      setIsEditFormValid(false)}
+  }
+  function editProfileData(e){
+    e.preventDefault();
+    
+const newUserData={name:values.name, email:values.email}
+props.onSubmit(newUserData)
+    setIsFormButtonInvisible(true)
   }
 
   return (
@@ -25,37 +43,40 @@ export default function Profile(props) {
         name="profile"
         heading={`Привет, ${currentUser.name}!`}
         buttonText="Сохранить"
-        isFormButtonInactive={isFormButtonInactive}
-        isValid={isFormValid}       
+        isFormButtonInvisible={isFormButtonInvisible}
+        isValid={isEditFormValid}  
+        onSubmit={editProfileData}     
       >
         <Input
+         type="text"
+         disabled={isDisabled}
           form="profile"
           name="name"
-          type="text"
           placeholder="Введите имя"
           label="Имя"
           value={values?values.name:''}
-          onChange={handleInputChange}
+          onChange={handleChange}
           error={errorMessage}
-        //  pattern={nameRegEx.source}
+      
           minLength={2}
           maxLength={32}
-      
+       
 
         />
         <Input
           form="profile"
           name="email"
           type="email"
+          disabled={isDisabled}
           placeholder="Введите e-mail"
           label="E-mail"
           value={values?values.email:''}
-          onChange={handleInputChange}
+          onChange={handleChange}
           error={errorMessage}
      
           />
       </Form>
-      {isFormButtonInactive ? (
+      {isFormButtonInvisible ? (
         <div className="profile__buttons">
           <Button
             buttonText="Редактировать"

@@ -27,7 +27,7 @@ function getJson(res) {
           headers: getHeaders(),
           body: JSON.stringify(userData),
         });
-        return this._getJson(res);
+        return getJson(res);
       }
       export async function register(userData) {
         const res = await fetch(`${basePath}/signup`, {

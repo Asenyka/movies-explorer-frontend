@@ -23,7 +23,7 @@ return false
         buttonText={props.buttonText}
         type="submit"
         modifier={
-          props.isFormButtonInactive
+          props.isFormButtonInvisible
             ? "form_hidden"
             : 
           props.isValid?`form button_form_${props.name}`:
