@@ -34,10 +34,9 @@ function App() {
   const [savedCards, setSavedCards] = useState([]);
   const [filterState, setFilterState] = useState(false);
   const [onSearch, setOnSearch] = useState(false);
-  const[onSavedSearch, setOnSavedSearch]=useState(false)
+  
   const [tipText, setTipText] = useState("");
-  const [savedTipText, setSavedTipText]=useState('');
-  const [savedSearchString, setSavedSearchString] = useState("");
+ 
   const navigate = useNavigate();
   const jwt = localStorage.getItem("jwt");
 
@@ -76,7 +75,7 @@ function App() {
         console.log(err)   
       }) 
     }
-  }, []);
+  }, [loggedIn, setSavedCards]);
   
   function setCardsToLS(cardsToSave) {
     localStorage.setItem("searchedCards", JSON.stringify(cardsToSave));
@@ -189,45 +188,8 @@ function closeUxPopup(){
       setCardsToLS(searchedCards);
     }
   }
-  function handleSavedFilterClick(state) {
-        setFilterState(state);
-        getUserCards()
-        .then((userCards) => {
-          const searchedCards = filterItems(userCards, savedSearchString);
-          if (state) {
-            const filteredCards = filterDuration(searchedCards);
-            setSavedCards(filteredCards);
-          } else {
-            setSavedCards(searchedCards);
-          }
-        })
-          .catch((err) => {
-            setSavedTipText(
-              "Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз."
-            );
-            console.log(err)   
-          })
-        
-  }
-  function handleSearchSavedSubmit(string) {
-    setOnSavedSearch(true)
-    setSavedSearchString(string);
-    const newCards = filterItems(savedCards, string);
-    if (filterState) {
-      const shortFilms = filterDuration(newCards);
-      if (shortFilms.length !== 0) {
-        setSavedCards(shortFilms);
-      } else {
-        setTipText("Ничего не найдено");
-      }
-    } else {
-      if (newCards.length !== 0) {
-        setSavedCards(newCards);
-      } else {
-        setTipText("Ничего не найдено");
-      }
-    }
-  }
+  
+  
 
   function handleSearchSubmit(string) {
     setOnSearch(true);
@@ -293,6 +255,7 @@ setCurrentUser(user)
   }
   function handleCheckOut() {
     localStorage.clear();
+    setCards([])
     setLoggedIn(false);
     navigate("/signin");
   }
@@ -313,10 +276,8 @@ setCurrentUser(user)
                   cards={savedCards}
                   loggedIn={loggedIn}
                   onCardDelete={handleCardDelete}
-                  onSearchSubmit={handleSearchSavedSubmit}
-                  onFilterClick={handleSavedFilterClick}
-                  onSearch={onSavedSearch}
-                  tipText={savedTipText}
+                  filterItems={filterItems}
+                  filterDuration={filterDuration}
                 />
               }
             />

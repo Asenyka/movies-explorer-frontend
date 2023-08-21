@@ -19,7 +19,6 @@ export default function Profile(props) {
 
 useEffect(()=>
 {
-  console.log(newDataMarker)
   if(newDataMarker&&isFormValid){
   setIsEditFormValid(true);
   }

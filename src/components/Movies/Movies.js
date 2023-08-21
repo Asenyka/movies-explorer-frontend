@@ -27,7 +27,7 @@ export default function Movies({
      setCardsTotal(cards);
     } else {
       const previousCards = JSON.parse(searchedCards);
-      if (previousCards.length!==0){
+      if (previousCards){
       setCardsToShow(previousCards.slice(0, cardNumber));
      setCardsTotal(previousCards);
     }}
