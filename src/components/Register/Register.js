@@ -21,7 +21,7 @@ export default function Register(props) {
    
     <PageWithForm
       question="Уже зарегистрированы?"
-      linkTo="/register"
+      linkTo="/signin"
       linkText="Войти"
       modifier="register"
     >
@@ -42,7 +42,6 @@ export default function Register(props) {
           value={values.name||""}
           onChange={handleInputChange}
           error={errors.name}
-          pattern={`$^[A-Za-zU+0400–U+04FF -]+$`}
           minLength={2}
           maxLength={32}
         />
