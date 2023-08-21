@@ -22,7 +22,7 @@ export default function Movies({
 
 
   useEffect(() => {
-    if (cards.length !== 0) {
+    if (cards.length!==0) {
       setCardsToShow(cards.slice(0, cardNumber));
      setCardsTotal(cards);
     } else {

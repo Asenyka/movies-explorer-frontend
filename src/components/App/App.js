@@ -22,9 +22,12 @@ import {
   deleteUserCard,
   sendUserCard,
 } from "../../utils/MainApi";
+import UxPopup from "../UxPopup/UxPopup";
 
 function App() {
   const [isNavigationOpen, setIsNavigationOpen] = useState(false);
+  const [isUxPopupOpen, setIsUxPopupOpen] = useState(false);
+  const [uxPopupText, setUxPopupText] = useState('');
   const [loggedIn, setLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
   const [cards, setCards] = useState([]);
@@ -65,15 +68,14 @@ function App() {
   }, [loggedIn]);
 
   useEffect(() => {
+    if (loggedIn) {
     getUserCards()
     .then((userCards) => {
       setSavedCards(userCards)})
       .catch((err) => {
-        setSavedTipText(
-          "Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз."
-        );
         console.log(err)   
       }) 
+    }
   }, []);
   
   function setCardsToLS(cardsToSave) {
@@ -85,7 +87,9 @@ function App() {
   function closeNavigation() {
     setIsNavigationOpen(false);
   }
-
+function closeUxPopup(){
+  setIsUxPopupOpen(false)
+}
   function handleCardSave(cardID) {
     const searchedCards = localStorage.getItem("searchedCards");
     const searchedCardsArr = JSON.parse(searchedCards);
@@ -102,9 +106,6 @@ function App() {
     .then((userCards) => {
       setSavedCards(userCards)})
       .catch((err) => {
-        setSavedTipText(
-          "Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз."
-        );
         console.log(err)   
       }) 
     })
@@ -144,15 +145,19 @@ function App() {
         navigate("/movies", { replace: true });
       })
       .catch((err) => {
+        setUxPopupText(`Не удалось войти. ${err}`)
+        setIsUxPopupOpen(true)
         console.log(err);
       });
   }
   function handleRegister(userData) {
     register(userData)
       .then(() => {
-        navigate("/signin", { replace: true });
+        handleLogin({"email":userData.email, "password":userData.password})
       })
       .catch((err) => {
+        setUxPopupText(`Не удалось зарегистрироваться. ${err}`)
+        setIsUxPopupOpen(true)
         console.log(err);
       });
   }
@@ -272,12 +277,17 @@ function App() {
         console.log(err);
       });
   }
+
   function handleEditUserData(userData){
  sendUserInfo(userData)
  .then((user)=>{
+setUxPopupText("Данные пользователя успешно обновлены");
+setIsUxPopupOpen(true);
 setCurrentUser(user)
  })
  .catch((err)=>{
+  setUxPopupText("Не удалось обновить данные пользователя")
+  setIsUxPopupOpen(true)
   console.log(err)
  })
   }
@@ -346,7 +356,7 @@ setCurrentUser(user)
             />
             <Route path="*" element={<ErrorPage/>}/>
           </Routes>
-          
+          <UxPopup isOpen={isUxPopupOpen} text={uxPopupText} onClose={closeUxPopup}/>
           <Navigation isOpen={isNavigationOpen} onClose={closeNavigation} />
         </main>
         <Footer />

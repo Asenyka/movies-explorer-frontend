@@ -21,6 +21,7 @@ export default function Input({label, minLength, maxLength, disabled, id, type, 
           disabled={disabled}
           minLength={minLength}
           maxLength={maxLength}
+          autoComplete="new-password"
 
         />
       </label>

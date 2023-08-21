@@ -14,6 +14,7 @@ return false
       method="get"
       name={props.name}
       noValidate
+      
     >
       <h2 className={`form__heading form__heading_${props.name}`}>
         {props.heading}

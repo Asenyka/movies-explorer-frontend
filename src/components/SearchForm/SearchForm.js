@@ -8,8 +8,13 @@ const searchedString = localStorage.getItem("searchString");
 const {values, handleInputChange, resetForm, errors, isFormValid } = useFormWithValidation();
 
   useEffect(()=>{
-    resetForm(props.forSavedMovies?{}:{searchField:searchedString})
-  }, [])
+    if(searchedString===null||props.forSavedMovies)
+    {
+      resetForm({})
+    }else{
+      resetForm({searchField:searchedString})
+    }
+}, [])
 
  function  handleSearch(e){
 e.preventDefault();
@@ -31,7 +36,7 @@ props.onSearchSubmit(values.searchField)
           id="search"
           type="text"
           placeholder="Ключевое слово"
-          value={values.searchField||''}
+          value={values.searchField}
           onChange={handleInputChange}
           error={errors.searchField}
           

@@ -14,7 +14,13 @@
 .button:hover {
   opacity: 0.8;
 }
-
+.button_close{
+  width: 22px;
+  height: 22px;
+  position: absolute;
+  top: 13.44px;
+  right: 13.44px;
+}
 .button_header-nav {
   width: 40px;
   height: 43px;
@@ -35,7 +41,7 @@
   min-height: 26px;
   text-align: center;
 }
-.button_close_navigation {
+.button_close{
   width: 22px;
   height: 22px;
   position: absolute;
@@ -140,7 +146,7 @@
     margin-bottom: 80px;
   }
 
-  .button_close_navigation {
+  .button_close {
     top: 22.44px;
     right: 22.44px;
   }
