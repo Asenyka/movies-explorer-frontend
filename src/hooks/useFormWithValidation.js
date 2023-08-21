@@ -43,12 +43,15 @@ setErrors({...errors, [name]: "Введите корректные данные"
     const validity = target.validity;
     setValues({ ...values, [name]: value });
     if(!validity.valid){
+      setIsFormValid(false)
     validate(name, validity)
   }else{
       if(name==="name"&&!nameRegExp.test(value))
-      {setErrors({...errors, [name]: "Имя может содержать только буквы, пробел и дефис"})}
+      {setErrors({...errors, [name]: "Имя может содержать только буквы, пробел и дефис"})
+    setIsFormValid(false)}
       else if(name==="email"&&!isEmail(value))
-      {setErrors({...errors, [name]: "Введите корректный email. Например, example@example.ru"})}
+      {setErrors({...errors, [name]: "Введите корректный email. Например, example@example.ru"})
+    setIsFormValid(false)}
       else{
     setErrors({...errors, [name]:""})
     setIsFormValid(target.closest("form").checkValidity());

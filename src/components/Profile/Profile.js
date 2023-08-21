@@ -7,33 +7,43 @@ import CurrentUserContext from "../../contexts/CurrentUserContext";
 export default function Profile(props) {
   const currentUser = useContext(CurrentUserContext);
   const {values, handleInputChange, resetForm, errors, isFormValid} = useFormWithValidation();
-  const [isDisabled, setIsDisabled] =useState(true)
-  const [isEditFormValid, setIsEditFormValid]=useState(false)
+  const [isDisabled, setIsDisabled] =useState(true);
+  const [isEditFormValid, setIsEditFormValid] = useState(false);
     const [isFormButtonInvisible, setIsFormButtonInvisible] = useState(true);
-  
+  const newDataMarker=values.name !== currentUser.name || values.email !== currentUser.email
 
   
   useEffect(()=>{
     resetForm(currentUser)
   }, [resetForm, currentUser])
 
+useEffect(()=>
+{
+  console.log(newDataMarker)
+  if(newDataMarker&&isFormValid){
+  setIsEditFormValid(true);
+  }
+  else{
+
+    setIsEditFormValid(false);
+  }
+
+},[newDataMarker, isFormValid]
+)
+ 
   function handleEditClick(e) {
     e.preventDefault();
     setIsFormButtonInvisible(false);
     setIsDisabled(false);
   }
-  function handleChange(e){
-    handleInputChange(e);
-     if(values.name !== currentUser.name || values.email !== currentUser.email){
-  isFormValid?setIsEditFormValid(true):setIsEditFormValid(false)}else{
-      setIsEditFormValid(false)}
-  }
+  
   function editProfileData(e){
     e.preventDefault();
  const newUserData={name:values.name, email:values.email}
 props.onSubmit(newUserData)
     setIsFormButtonInvisible(true)
   }
+ 
 
   return (
     <section className="profile">
@@ -53,7 +63,7 @@ props.onSubmit(newUserData)
           placeholder="Введите имя"
           label="Имя"
           value={values?values.name:''}
-          onChange={handleChange}
+          onChange={handleInputChange}
           error={errors.name}
           minLength={2}
           maxLength={32}
@@ -66,7 +76,7 @@ props.onSubmit(newUserData)
           placeholder="Введите e-mail"
           label="E-mail"
           value={values?values.email:''}
-          onChange={handleChange}
+          onChange={handleInputChange}
           error={errors.email}
      
           />
