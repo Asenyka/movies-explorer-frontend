@@ -146,7 +146,9 @@ function closeUxPopup(){
         localStorage.setItem("jwt", res.token);
         setLoggedIn(true);
         setCurrentUser({ userData });
-        navigate("/movies", { replace: true });
+      })
+      .then(()=>{
+         navigate("/movies", { replace: true });
       })
       .catch((err) => {
         setUxPopupText(`Не удалось войти. ${err}`)

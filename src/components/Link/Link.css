@@ -6,8 +6,9 @@
 .link:hover {
   opacity: 0.7;
 }
-.link:active {
+.active {
   font-weight: 500;
+  text-decoration: underline;
 }
 .link_to-profile {
   display: block;

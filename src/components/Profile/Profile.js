@@ -42,7 +42,6 @@ useEffect(()=>
 props.onSubmit(newUserData)
     setIsFormButtonInvisible(true)
     setIsDisabled(true)
-    resetForm(currentUser)
   }
 
 
