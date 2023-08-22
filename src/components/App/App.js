@@ -257,7 +257,7 @@ setCurrentUser(user)
     localStorage.clear();
     setCards([])
     setLoggedIn(false);
-    navigate("/signin");
+    navigate("/");
   }
 
   return (
