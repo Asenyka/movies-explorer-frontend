@@ -6,7 +6,7 @@ export default function useFormWithValidation() {
   const [values, setValues] = useState({});
   const [errors, setErrors] = useState({});
   const [isFormValid, setIsFormValid] = useState(false);
-  const nameRegExp = new RegExp('^[а-яА-ЯёЁa-zA-Z\s/-]+$');
+  const regExp = /^[а-яА-ЯёЁa-zA-Z\s-]+$/;
  
  function validate (name, validity){
   if (name==="name"){
@@ -46,7 +46,7 @@ setErrors({...errors, [name]: "Введите корректные данные"
       setIsFormValid(false)
     validate(name, validity)
   }else{
-      if(name==="name"&&!nameRegExp.test(value))
+      if(name==="name"&&!regExp.test(value))
       {setErrors({...errors, [name]: "Имя может содержать только буквы, пробел и дефис"})
     setIsFormValid(false)}
       else if(name==="email"&&!isEmail(value))
