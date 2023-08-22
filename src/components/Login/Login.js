@@ -7,20 +7,18 @@ import PageWithForm from "../PageWithForm/PageWithForm";
 
 
 export default function Login(props) {
+  const navigate = useNavigate();
   const {values, handleInputChange, resetForm, errors, isFormValid} = useFormWithValidation();
   useEffect(()=>{
     resetForm({})
    }, [resetForm])
 
- 
-  const navigate = useNavigate();
- 
-  function handleSubmit(e) {
+   function handleSubmit(e) {
     e.preventDefault();
     props.onLogin({ password: values.password, email: values.email });
     navigate("/movies", { replace: true });
   }
-  return (
+    return (
     <PageWithForm
       question="Ещё не зарегистрированы?"
       linkTo="/signup"
@@ -57,4 +55,4 @@ export default function Login(props) {
       </Form>
     </PageWithForm>
   );
-}
+  }

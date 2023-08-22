@@ -14,6 +14,7 @@ import Profile from "../Profile/Profile";
 import Navigation from "../Navigation/Navigation";
 import ErrorPage from "../ErrorPage/ErrorPage";
 import ProtectedRouteElement from "../PotectedRouteElement";
+import RedirectComponent from "../RedirectComponent/RedirectComponent";
 import { getUserInfo, sendUserInfo} from "../../utils/MainApi";
 import { getCards } from "../../utils/MoviesApi";
 import { login, register, checkToken } from "../../utils/MainApi";
@@ -266,8 +267,7 @@ setCurrentUser(user)
         <Header onOpenNavigation={openNavigation} loggedIn={loggedIn} />
         <main>
           <Routes>
-            <Route path="/" element={<Main />} />
-
+           
             <Route
               path="/saved-movies"
               element={
@@ -310,11 +310,15 @@ setCurrentUser(user)
                 />
               }
             />
-            <Route path="/signin" element={<Login onLogin={handleLogin} />} />
+           
+            <Route path="/signin" element={loggedIn?<RedirectComponent/>:<Login onLogin={handleLogin} loggedIn={loggedIn}/>} />
             <Route
               path="/signup"
-              element={<Register onRegister={handleRegister} />}
+              element={loggedIn?<RedirectComponent/>:<Register onRegister={handleRegister} />}
             />
+          
+          <Route path="/" element={<Main />} />
+
             <Route path="*" element={<ErrorPage/>}/>
           </Routes>
           <UxPopup isOpen={isUxPopupOpen} text={uxPopupText} onClose={closeUxPopup}/>
