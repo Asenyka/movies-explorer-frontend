@@ -12,6 +12,7 @@ export default function SavedMovies({
   filterDuration
 }) {
   const currentUser = useContext(CurrentUserContext);
+  const [isSearching, setIsSearching] =useState(false)
   const [ownCards, setOwnCards] =useState([]);
   const [savedSearchString, setSavedSearchString] = useState("");
   const [filterState, setFilterState] =useState('');
@@ -22,7 +23,7 @@ export default function SavedMovies({
   const filteredCards=cards.filter((el) => el.owner === currentUser._id);
   setOwnCards(filteredCards)
   setCardsToShow(filteredCards)
- }, [cards])
+ }, [cards, currentUser._id])
  
   function handleFilterClick(state) {
     setOnSearch(true);
@@ -37,27 +38,43 @@ export default function SavedMovies({
   }
     
   function handleSearchSubmit(string) {
-    setOnSearch(true);
+     setIsSearching(true);
        setSavedSearchString(string);
     const newCards = filterItems(ownCards, string);
     if (filterState) {
       const shortFilms = filterDuration(newCards);
       if (shortFilms.length !== 0) {
         setCardsToShow(shortFilms);
+        setIsSearching(false);
       } else {
         setCardsToShow([])
+        setOnSearch(true)
         setTipText("Ничего не найдено");
+        setIsSearching(false);
       }
     } else {
       if (newCards.length !== 0) {
         setCardsToShow(newCards);
+        setIsSearching(false);
       } else {
         setCardsToShow([])
+        setOnSearch(true)
         setTipText("Ничего не найдено");
+        setIsSearching(false);
       }
     }
   }
-
+if(isSearching){
+  return (
+    <section className="saved-movies">
+      <PageWithMovies onFilterClick={handleFilterClick}
+        onSearchSubmit={handleSearchSubmit}
+        forSavedMovies={true}>
+       <Preloader /> 
+      </PageWithMovies>
+    </section>
+  );
+}
   
   if (cardsToShow.length !== 0) {
     return (
@@ -81,7 +98,7 @@ export default function SavedMovies({
         <PageWithMovies onFilterClick={handleFilterClick}
           onSearchSubmit={handleSearchSubmit}
           forSavedMovies={true}>
-           {onSearch === false ? <Preloader /> : <SearchTip tipText={tipText} />}
+           {onSearch?<SearchTip tipText={tipText} />:<SearchTip tipText={"Вы ещё не сохранили ни одного фильма"} />}
         </PageWithMovies>
       </section>
     );

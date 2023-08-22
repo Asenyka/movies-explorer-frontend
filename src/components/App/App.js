@@ -34,7 +34,7 @@ function App() {
   const [cards, setCards] = useState([]);
   const [savedCards, setSavedCards] = useState([]);
   const [filterState, setFilterState] = useState(false);
- 
+ const [isSearching, setIsSearching] =useState(false);
   const [onSearch, setOnSearch] = useState(false);
   
   const [tipText, setTipText] = useState("");
@@ -199,12 +199,13 @@ function closeUxPopup(){
   
 
   function handleSearchSubmit(string) {
-    setOnSearch(true);
+    
     localStorage.setItem("searchString", string);
     localStorage.setItem("filterState", JSON.stringify(filterState));
-
+    setIsSearching(true)
     getCards()
       .then((cards) => {
+        
         cards.forEach((el) => {
           const thumbnail = el.image.formats.thumbnail.url;
           el.image = `https://api.nomoreparties.co/${el.image.url}`;
@@ -227,19 +228,27 @@ function closeUxPopup(){
           const shortFilms = filterDuration(newCards);
           if (shortFilms.length !== 0) {
             setCards(shortFilms);
+            setIsSearching(false);
+            setOnSearch(true);
             localStorage.setItem("searchedCards", JSON.stringify(shortFilms));
           } else {
             setTipText("Ничего не найдено");
+            setOnSearch(true);
           }
         } else {
           if (newCards.length !== 0) {
             setCards(newCards);
+            setOnSearch(true);
+            setIsSearching(false);
           } else {
             setTipText("Ничего не найдено");
+            setOnSearch(true);
+            setIsSearching(false)
           }
         }
       })
       .catch((err) => {
+        setIsSearching(false)
         setTipText(
           "Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз."
         );
@@ -273,7 +282,7 @@ setCurrentUser(user)
         <Header onOpenNavigation={openNavigation} loggedIn={loggedIn} />
         <main>
           <Routes>
-           
+         
             <Route
               path="/saved-movies"
               element={loggedIn?
@@ -300,6 +309,7 @@ setCurrentUser(user)
                   tipText={tipText}
                   onCardSave={handleCardSave}
                   onCardDelete={handleCardDelete}
+                  isSearching={isSearching}
                 />:<></>
               }
             />

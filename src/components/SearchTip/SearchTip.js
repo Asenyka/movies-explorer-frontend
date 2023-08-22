@@ -1,5 +1,5 @@
 export default function SearchTip(tipText){
 return(
-    <p>{`${tipText.tipText}`}</p>
+    <p className="tip">{`${tipText.tipText}`}</p>
 )
 }

@@ -12,12 +12,14 @@ export default function Movies({
   onFilterClick,
   tipText,
   onCardSave,
-  onCardDelete
+  onCardDelete,
+  isSearching
 }) {
   const [cardsToShow, setCardsToShow] = useState([]);
   const [cardsTotal, setCardsTotal] = useState([])
   const windowWidth = window.innerWidth;
   const cardNumber = windowWidth < 480 ? 5 : windowWidth < 1280 ? 8 : 12;
+  const additionalCardNumber = windowWidth < 1280 ? 2 : 3;
   const searchedCards = localStorage.getItem("searchedCards");
 
 
@@ -34,8 +36,17 @@ export default function Movies({
   }, [cards, cardNumber, searchedCards]);
 
   function moreOnClick() {
-    const newCardNumber = cardsToShow.length + cardNumber;
+    const newCardNumber = cardsToShow.length + additionalCardNumber;
     setCardsToShow(cardsTotal.slice(0, newCardNumber));
+  }
+  if(isSearching){
+    return (
+      <section className="movies">
+        <PageWithMovies onSearchSubmit={onSearchSubmit} onFilterClick={onFilterClick}>
+         <Preloader />
+        </PageWithMovies>
+      </section>
+    );
   }
 
   if (cardsToShow.length !==0) {
@@ -60,7 +71,7 @@ export default function Movies({
     return (
       <section className="movies">
         <PageWithMovies onSearchSubmit={onSearchSubmit} onFilterClick={onFilterClick}>
-          {onSearch === false ? <Preloader /> : <SearchTip tipText={tipText} />}
+         {onSearch?<SearchTip tipText={tipText}/>:<SearchTip tipText="Введите запрос для поска фильма"/>}
         </PageWithMovies>
       </section>
     );
