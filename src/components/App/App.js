@@ -34,6 +34,7 @@ function App() {
   const [cards, setCards] = useState([]);
   const [savedCards, setSavedCards] = useState([]);
   const [filterState, setFilterState] = useState(false);
+ 
   const [onSearch, setOnSearch] = useState(false);
   
   const [tipText, setTipText] = useState("");
@@ -43,11 +44,14 @@ function App() {
 
  
   useEffect(() => {
+  
     if (jwt) {
-      const jwt = localStorage.getItem("jwt");
       checkToken(jwt)
         .then(() => {
           setLoggedIn(true);
+        })
+        .then(()=>{
+        
         })
         .catch((err) => {
           console.log(err);
@@ -258,7 +262,7 @@ setCurrentUser(user)
     localStorage.clear();
     setCards([])
     setLoggedIn(false);
-    navigate("/");
+    navigate("/", {replace:true});
   }
 
   return (
@@ -270,7 +274,7 @@ setCurrentUser(user)
            
             <Route
               path="/saved-movies"
-              element={
+              element={loggedIn?
                 <ProtectedRouteElement
                   element={SavedMovies}
                   cards={savedCards}
@@ -278,12 +282,12 @@ setCurrentUser(user)
                   onCardDelete={handleCardDelete}
                   filterItems={filterItems}
                   filterDuration={filterDuration}
-                />
+                />:<></>
               }
             />
             <Route
               path="/movies"
-              element={
+              element={loggedIn?
                 <ProtectedRouteElement
                   element={Movies}
                   cards={cards}
@@ -294,20 +298,20 @@ setCurrentUser(user)
                   tipText={tipText}
                   onCardSave={handleCardSave}
                   onCardDelete={handleCardDelete}
-                />
+                />:<></>
               }
             />
 
             <Route
               path="/profile"
-              element={
+              element={loggedIn?
                 <ProtectedRouteElement
                   element={Profile}
                   user={currentUser}
                   loggedIn={loggedIn}
                   onCheckout={handleCheckOut}
                   onSubmit={handleEditUserData}
-                />
+                />:<></>
               }
             />
            
