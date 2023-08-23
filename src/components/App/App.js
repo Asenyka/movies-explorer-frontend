@@ -37,7 +37,6 @@ function App() {
   const [filteredCards, setFilteredCards] = useState([]);
   const modifiedCards = localStorage.getItem("allCards");
 
-
   const [isSearching, setIsSearching] = useState(false);
   const [onSearch, setOnSearch] = useState(false);
 
@@ -72,11 +71,13 @@ function App() {
   }, [loggedIn]);
 
   useEffect(() => {
-//console.log(currentUser._id)
+    //console.log(currentUser._id)
     if (loggedIn) {
       getUserCards()
         .then((userCards) => {
-          const currentUserCards = userCards.filter((el)=>el.owner===currentUser._id)
+          const currentUserCards = userCards.filter(
+            (el) => el.owner === currentUser._id
+          );
           setSavedCards(currentUserCards);
         })
         .catch((err) => {
@@ -87,7 +88,7 @@ function App() {
   //При закрузке страницы, если есть в локальном хранилище карточки, изменении массива modifiedCards в локальном хранилище или savedCards state,  происходит создание массива currentCards
   //Дальше при поиске он используется как основа для поиска и создания массива filteredCards который передается на отображение
 
- /* useEffect(() => {
+  /* useEffect(() => {
    console.log(modifiedCards)
     if (modifiedCards) {
       const modifiedCardsArr = JSON.parse(modifiedCards);
@@ -104,9 +105,8 @@ function App() {
   }, [savedCards, modifiedCards]);
   */
 
-
   function modifyCards(cards) {
-      cards.forEach((el) => {
+    cards.forEach((el) => {
       const thumbnail = el.image.formats.thumbnail.url;
       el.image = `https://api.nomoreparties.co/${el.image.url}`;
       el.thumbnail = `https://api.nomoreparties.co/${thumbnail}`;
@@ -115,9 +115,9 @@ function App() {
       delete el.created_at;
       delete el.updated_at;
     });
-    
-  //  localStorage.setItem("allCards", JSON.stringify(cards));
-return cards
+
+    //  localStorage.setItem("allCards", JSON.stringify(cards));
+    return cards;
   }
   function filterNames(arr, query) {
     return arr.filter(
@@ -131,13 +131,14 @@ return cards
   }
   function filterCards(cardsToFilter, string, state) {
     const newCards = filterNames(cardsToFilter, string);
-    if (state===true) {
+    if (state === true) {
       const shortFilms = filterDuration(newCards);
       if (shortFilms.length !== 0) {
         setFilteredCards(shortFilms);
         setIsSearching(false);
         setOnSearch(true);
-        localStorage.setItem("searchedCards", JSON.stringify(filteredCards));
+        localStorage.setItem("searchedCards", JSON.stringify(newCards));
+
       } else {
         setTipText("Ничего не найдено");
         setOnSearch(true);
@@ -147,8 +148,8 @@ return cards
         setFilteredCards(newCards);
         setOnSearch(true);
         setIsSearching(false);
-      localStorage.setItem("searchedCards", JSON.stringify(filteredCards));
-      } else {
+        localStorage.setItem("searchedCards", JSON.stringify(newCards));
+        } else {
         setTipText("Ничего не найдено");
         setOnSearch(true);
         setIsSearching(false);
@@ -156,21 +157,23 @@ return cards
     }
   }
 
-  function compileCards (modifiedCards){
-    const newModifiedCards = modifiedCards.filter(e=>savedCards.findIndex(i=>i.nameRU === e.nameRU) === -1);
-    const cardsAndSavedCards = newModifiedCards.concat(savedCards);
+  function compileCards(modifiedCards) {
+    const newModifiedCards = modifiedCards.filter(
+      (e) => savedCards.findIndex((i) => i.nameRU === e.nameRU) === -1
+    );
+    const cardsAndSavedCards = savedCards.concat(newModifiedCards);
     setCurrentCards(cardsAndSavedCards);
-    return cardsAndSavedCards
+    return cardsAndSavedCards;
   }
   function handleSearchSubmit(string) {
     setIsSearching(true);
     localStorage.setItem("searchString", string);
     const state = localStorage.getItem("filterState");
-   if (!modifiedCards) {
+    if (!modifiedCards) {
       getCards()
         .then((cards) => {
-          const modifiedCards=modifyCards(cards);
-          localStorage.setItem('allCards', JSON.stringify(modifiedCards))
+          const modifiedCards = modifyCards(cards);
+          localStorage.setItem("allCards", JSON.stringify(modifiedCards));
           const currentCards = compileCards(modifiedCards);
           filterCards(currentCards, string, state);
         })
@@ -184,21 +187,24 @@ return cards
     } else {
       const modifiedCardsArr = JSON.parse(modifiedCards);
       const currentCards = compileCards(modifiedCardsArr);
-          filterCards(currentCards, string, state);
-     }
+      filterCards(currentCards, string, state);
+    }
   }
 
   function handleCardSave(cardID) {
-   const searchedCards = localStorage.getItem("searchedCards");
-   const searchedCardsArr = JSON.parse(searchedCards);
-     const cardToSave = searchedCardsArr.find((el) => el.movieId ===cardID);
-     const cardIndex = searchedCardsArr.findIndex((el)=>el.movieId ===cardID);
-      sendUserCard(cardToSave)
+    const searchedCards = localStorage.getItem("searchedCards");
+    const searchedCardsArr = JSON.parse(searchedCards);
+    const savedCardsCopy = savedCards;
+    const cardToSave = searchedCardsArr.find((el) => el.movieId === cardID);
+    const cardIndex = searchedCardsArr.findIndex((el) => el.movieId === cardID);
+    sendUserCard(cardToSave)
       .then((savedCard) => {
         searchedCardsArr.splice(cardIndex, 1, savedCard);
         setFilteredCards(searchedCardsArr);
-        localStorage.setItem("searchedCards", JSON.stringify(searchedCardsArr))
-         })
+        localStorage.setItem("searchedCards", JSON.stringify(searchedCardsArr));
+        savedCardsCopy.unshift(savedCard);
+        setSavedCards(savedCardsCopy);
+      })
       .catch((err) => {
         console.log(err);
       });
@@ -209,8 +215,8 @@ return cards
     //const state = localStorage.getItem("filterState");
     const searchedCards = localStorage.getItem("searchedCards");
     const searchedCardsArr = JSON.parse(searchedCards);
-    const cardToDelete= searchedCardsArr.find((el) => el._id === api_id);
-    const cardIndex = searchedCardsArr.findIndex((el)=>el._id === api_id);
+    const cardToDelete = searchedCardsArr.find((el) => el._id === api_id);
+    const cardIndex = searchedCardsArr.findIndex((el) => el._id === api_id);
     //const modifiedCardsArr = JSON.parse(modifiedCards);
     deleteUserCard(api_id)
       .then((userCards) => {
@@ -219,17 +225,20 @@ return cards
         delete cardToDelete.__v;
         searchedCardsArr.splice(cardIndex, 1, cardToDelete);
         setFilteredCards(searchedCardsArr);
-        localStorage.setItem("searchedCards", JSON.stringify(searchedCardsArr))
-         })
+        localStorage.setItem("searchedCards", JSON.stringify(searchedCardsArr));
+        const currentUserCards = userCards.filter(
+          (el) => el.owner === currentUser._id
+        );
+        setSavedCards(currentUserCards);
+      })
       .catch((err) => {
         console.log(err);
       });
   }
 
- 
   function handleFilterClick(state) {
     const string = localStorage.getItem("searchString");
-      filterCards(string, state);  
+    filterCards(string, state);
   }
 
   function handleEditUserData(userData) {
