@@ -6,16 +6,15 @@ import Input from "../Input/Input";
 import PageWithForm from "../PageWithForm/PageWithForm";
 
 export default function Register(props) {
-  const [isDisabled, setIsDisabled] =useState(false);
+  
   const {values, handleInputChange, resetForm, errors, isFormValid} = useFormWithValidation();
   useEffect(()=>{
-    resetForm({})
+    resetForm({});
   }, [resetForm])
 
     function handleSubmit(e) {
     e.preventDefault();
     props.onRegister({ email: values.email, password: values.password, name: values.name});
-    setIsDisabled(true);
   }
   return (
    
@@ -33,7 +32,7 @@ export default function Register(props) {
         isValid={isFormValid} 
       >
         <Input
-        disabled={isDisabled}
+        disabled={props.isSendingForm===true?true:false}
           form="register"
           name="name"
           type="text"
@@ -46,7 +45,7 @@ export default function Register(props) {
           maxLength={32}
         />
         <Input
-         disabled={isDisabled}
+         disabled={props.isSendingForm===true?true:false}
           form="register"
           name="email"
           type="email"
@@ -58,7 +57,7 @@ export default function Register(props) {
       
         />
         <Input
-         disabled={isDisabled}
+         disabled={props.isSendingForm===true?true:false}
           form="register"
           name="password"
           type="password"

@@ -31,7 +31,7 @@ function App() {
   const [uxPopupText, setUxPopupText] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
-
+const [isSendingForm, setIsSendingForm]=useState(false);
   const [currentCards, setCurrentCards] = useState([]);
   const [savedCards, setSavedCards] = useState([]);
   const [filteredCards, setFilteredCards] = useState([]);
@@ -211,13 +211,10 @@ function App() {
   }
 
   function handleCardDelete(api_id) {
-    //const string = localStorage.getItem("searchString");
-    //const state = localStorage.getItem("filterState");
     const searchedCards = localStorage.getItem("searchedCards");
     const searchedCardsArr = JSON.parse(searchedCards);
-    const cardToDelete = searchedCardsArr.find((el) => el._id === api_id);
+    const cardToDelete = savedCards.find((el) => el._id === api_id);
     const cardIndex = searchedCardsArr.findIndex((el) => el._id === api_id);
-    //const modifiedCardsArr = JSON.parse(modifiedCards);
     deleteUserCard(api_id)
       .then((userCards) => {
         delete cardToDelete._id;
@@ -237,8 +234,10 @@ function App() {
   }
 
   function handleFilterClick(state) {
+    const searchedCards = localStorage.getItem("searchedCards");
+    const searchedCardsArr = JSON.parse(searchedCards);
     const string = localStorage.getItem("searchString");
-    filterCards(string, state);
+    filterCards(searchedCardsArr, string, state);
   }
 
   function handleEditUserData(userData) {
@@ -270,11 +269,13 @@ function App() {
     navigate("/", { replace: true });
   }
   function handleLogin(userData) {
+    setIsSendingForm(true)
     login(userData)
       .then((res) => {
         localStorage.setItem("jwt", res.token);
         setLoggedIn(true);
         setCurrentUser({ userData });
+        setIsSendingForm(false)
       })
       .then(() => {
         navigate("/movies", { replace: true });
@@ -282,17 +283,21 @@ function App() {
       .catch((err) => {
         setUxPopupText(`Не удалось войти. ${err}`);
         setIsUxPopupOpen(true);
+        setIsSendingForm(false)
         console.log(err);
       });
   }
   function handleRegister(userData) {
+    setIsSendingForm(true)
     register(userData)
       .then(() => {
         handleLogin({ email: userData.email, password: userData.password });
+        setIsSendingForm(false)
       })
       .catch((err) => {
         setUxPopupText(`Не удалось зарегистрироваться. ${err}`);
         setIsUxPopupOpen(true);
+        setIsSendingForm(false)
         console.log(err);
       });
   }
@@ -348,6 +353,7 @@ function App() {
                 loggedIn ? (
                   <ProtectedRouteElement
                     element={Profile}
+                    isSendingForm={isSendingForm}
                     user={currentUser}
                     loggedIn={loggedIn}
                     onCheckout={handleCheckOut}
@@ -365,7 +371,7 @@ function App() {
                 loggedIn ? (
                   <RedirectComponent />
                 ) : (
-                  <Login onLogin={handleLogin} loggedIn={loggedIn} />
+                  <Login onLogin={handleLogin} loggedIn={loggedIn} isSendingForm={isSendingForm} />
                 )
               }
             />
@@ -375,7 +381,7 @@ function App() {
                 loggedIn ? (
                   <RedirectComponent />
                 ) : (
-                  <Register onRegister={handleRegister} />
+                  <Register onRegister={handleRegister} isSendingForm={isSendingForm} />
                 )
               }
             />

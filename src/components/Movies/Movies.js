@@ -16,21 +16,26 @@ export default function Movies({
   isSearching
 }) {
   const [cardsToShow, setCardsToShow] = useState([]);
-  const [cardsTotal, setCardsTotal] = useState([])
+  const [cardsTotal, setCardsTotal] = useState([]);
+  const [currentCardNumber, setCurrentCardNumber] = useState(0);
   const windowWidth = window.innerWidth;
   const cardNumber = windowWidth < 480 ? 5 : windowWidth < 1280 ? 8 : 12;
   const additionalCardNumber = windowWidth < 1280 ? 2 : 3;
   const searchedCards = localStorage.getItem("searchedCards");
-
+  ;
 
   useEffect(() => {
     if (cards.length!==0) {
-      setCardsToShow(cards.slice(0, cardNumber));
+      currentCardNumber<cardNumber?
+      setCardsToShow(cards.slice(0, cardNumber)):
+      setCardsToShow(cards.slice(0, currentCardNumber));
      setCardsTotal(cards);
     } else {
       const previousCards = JSON.parse(searchedCards);
       if (previousCards){
-      setCardsToShow(previousCards.slice(0, cardNumber));
+        currentCardNumber<cardNumber?
+      setCardsToShow(previousCards.slice(0, cardNumber)):
+      setCardsToShow(previousCards.slice(0, currentCardNumber));
      setCardsTotal(previousCards);
     }}
   }, [cards, cardNumber, searchedCards]);
@@ -38,6 +43,7 @@ export default function Movies({
   function moreOnClick() {
     const newCardNumber = cardsToShow.length + additionalCardNumber;
     setCardsToShow(cardsTotal.slice(0, newCardNumber));
+    setCurrentCardNumber(newCardNumber);
   }
 
   if(isSearching){
