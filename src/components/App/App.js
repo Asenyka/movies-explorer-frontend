@@ -15,7 +15,7 @@ import Navigation from "../Navigation/Navigation";
 import ErrorPage from "../ErrorPage/ErrorPage";
 import ProtectedRouteElement from "../PotectedRouteElement";
 import RedirectComponent from "../RedirectComponent/RedirectComponent";
-import { getUserInfo, sendUserInfo} from "../../utils/MainApi";
+import { getUserInfo, sendUserInfo } from "../../utils/MainApi";
 import { getCards } from "../../utils/MoviesApi";
 import { login, register, checkToken } from "../../utils/MainApi";
 import {
@@ -28,31 +28,31 @@ import UxPopup from "../UxPopup/UxPopup";
 function App() {
   const [isNavigationOpen, setIsNavigationOpen] = useState(false);
   const [isUxPopupOpen, setIsUxPopupOpen] = useState(false);
-  const [uxPopupText, setUxPopupText] = useState('');
+  const [uxPopupText, setUxPopupText] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
-  const [cards, setCards] = useState([]);
+
+  const [currentCards, setCurrentCards] = useState([]);
   const [savedCards, setSavedCards] = useState([]);
-  const [filterState, setFilterState] = useState(false);
- const [isSearching, setIsSearching] =useState(false);
+  const [filteredCards, setFilteredCards] = useState([]);
+  const modifiedCards = localStorage.getItem("allCards");
+
+
+  const [isSearching, setIsSearching] = useState(false);
   const [onSearch, setOnSearch] = useState(false);
-  
+
   const [tipText, setTipText] = useState("");
- 
+
   const navigate = useNavigate();
   const jwt = localStorage.getItem("jwt");
 
- 
   useEffect(() => {
-  
     if (jwt) {
       checkToken(jwt)
         .then(() => {
           setLoggedIn(true);
         })
-        .then(()=>{
-        
-        })
+        .then(() => {})
         .catch((err) => {
           console.log(err);
         });
@@ -72,103 +72,54 @@ function App() {
   }, [loggedIn]);
 
   useEffect(() => {
+//console.log(currentUser._id)
     if (loggedIn) {
-    getUserCards()
-    .then((userCards) => {
-      setSavedCards(userCards)})
-      .catch((err) => {
-        console.log(err)   
-      }) 
+      getUserCards()
+        .then((userCards) => {
+          const currentUserCards = userCards.filter((el)=>el.owner===currentUser._id)
+          setSavedCards(currentUserCards);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
-  }, [loggedIn, setSavedCards]);
-  
-  function setCardsToLS(cardsToSave) {
-    localStorage.setItem("searchedCards", JSON.stringify(cardsToSave));
-  }
-  function openNavigation() {
-    setIsNavigationOpen(true);
-  }
-  function closeNavigation() {
-    setIsNavigationOpen(false);
-  }
-function closeUxPopup(){
-  setIsUxPopupOpen(false)
-}
-  function handleCardSave(cardID) {
-    const searchedCards = localStorage.getItem("searchedCards");
-    const searchedCardsArr = JSON.parse(searchedCards);
-    const cardToSave = searchedCardsArr.find((el) => el.movieId === cardID);
-    sendUserCard(cardToSave)
-      .then((savedCard) => {
-        const cardIndex = searchedCardsArr.findIndex(
-          (el) => el.movieId === savedCard.movieId
-        );
-        searchedCardsArr[cardIndex] = savedCard;
-        setCards(searchedCardsArr);
-        setCardsToLS(searchedCardsArr);
-        getUserCards()
-    .then((userCards) => {
-      setSavedCards(userCards)})
-      .catch((err) => {
-        console.log(err)   
-      }) 
-    })
-      .catch((err) => {
-        console.log(err);
-      });
-  }
+  }, [loggedIn, setSavedCards, currentUser._id]);
+  //При закрузке страницы, если есть в локальном хранилище карточки, изменении массива modifiedCards в локальном хранилище или savedCards state,  происходит создание массива currentCards
+  //Дальше при поиске он используется как основа для поиска и создания массива filteredCards который передается на отображение
 
-  function handleCardDelete(api_id) {
-    deleteUserCard(api_id)
-      .then((userCards) => {
-        setSavedCards(userCards);
-        const searchedCards = localStorage.getItem("searchedCards");
-        if (searchedCards) {
-          const cardsArr = JSON.parse(searchedCards);
-          const cardToDelete = cardsArr.find((el) => el._id === api_id);
-          const cardIndex = cardsArr.findIndex((el) => el._id === api_id);
-          delete cardToDelete._id;
-          delete cardToDelete.owner;
-          delete cardToDelete.__v;
-          cardsArr[cardIndex] = cardToDelete;
-          setCards(cardsArr);
-          setCardsToLS(cardsArr);
+ /* useEffect(() => {
+   console.log(modifiedCards)
+    if (modifiedCards) {
+      const modifiedCardsArr = JSON.parse(modifiedCards);
+      modifiedCardsArr.forEach((el) => {
+        if (savedCards.includes((item) => item.movieId === el.movieId)) {
+          el.remove();
         }
-      })
-      .catch((err) => {
-        console.log(err);
       });
-  }
+      const cardsAndSavedCards = modifiedCardsArr.concat(savedCards);
+      setCurrentCards(cardsAndSavedCards);
+    } else{
+      setCurrentCards([])
+    }
+  }, [savedCards, modifiedCards]);
+  */
 
-  function handleLogin(userData) {
-    login(userData)
-      .then((res) => {
-        localStorage.setItem("jwt", res.token);
-        setLoggedIn(true);
-        setCurrentUser({ userData });
-      })
-      .then(()=>{
-         navigate("/movies", { replace: true });
-      })
-      .catch((err) => {
-        setUxPopupText(`Не удалось войти. ${err}`)
-        setIsUxPopupOpen(true)
-        console.log(err);
-      });
-  }
-  function handleRegister(userData) {
-    register(userData)
-      .then(() => {
-        handleLogin({"email":userData.email, "password":userData.password})
-      })
-      .catch((err) => {
-        setUxPopupText(`Не удалось зарегистрироваться. ${err}`)
-        setIsUxPopupOpen(true)
-        console.log(err);
-      });
-  }
 
-  function filterItems(arr, query) {
+  function modifyCards(cards) {
+      cards.forEach((el) => {
+      const thumbnail = el.image.formats.thumbnail.url;
+      el.image = `https://api.nomoreparties.co/${el.image.url}`;
+      el.thumbnail = `https://api.nomoreparties.co/${thumbnail}`;
+      el.movieId = el.id;
+      delete el.id;
+      delete el.created_at;
+      delete el.updated_at;
+    });
+    
+  //  localStorage.setItem("allCards", JSON.stringify(cards));
+return cards
+  }
+  function filterNames(arr, query) {
     return arr.filter(
       (el) =>
         el.nameRU.toLowerCase().includes(query.toLowerCase()) ||
@@ -178,102 +129,163 @@ function closeUxPopup(){
   function filterDuration(arr) {
     return arr.filter((el) => el.duration <= 40);
   }
-
-  function handleFilterClick(state) {
-    setFilterState(state);
-    localStorage.setItem("filterState", JSON.stringify(state));
-    const cards = localStorage.getItem("allCards");
-    const searchString = localStorage.getItem("searchString");
-    const searchedCards = filterItems(JSON.parse(cards), searchString);
-
-    if (state) {
-      const filteredCards = filterDuration(searchedCards);
-      setCards(filteredCards);
-      setCardsToLS(filteredCards);
+  function filterCards(cardsToFilter, string, state) {
+    const newCards = filterNames(cardsToFilter, string);
+    if (state===true) {
+      const shortFilms = filterDuration(newCards);
+      if (shortFilms.length !== 0) {
+        setFilteredCards(shortFilms);
+        setIsSearching(false);
+        setOnSearch(true);
+        localStorage.setItem("searchedCards", JSON.stringify(filteredCards));
+      } else {
+        setTipText("Ничего не найдено");
+        setOnSearch(true);
+      }
     } else {
-      setCards(searchedCards);
-      setCardsToLS(searchedCards);
+      if (newCards.length !== 0) {
+        setFilteredCards(newCards);
+        setOnSearch(true);
+        setIsSearching(false);
+      localStorage.setItem("searchedCards", JSON.stringify(filteredCards));
+      } else {
+        setTipText("Ничего не найдено");
+        setOnSearch(true);
+        setIsSearching(false);
+      }
     }
   }
-  
-  
 
+  function compileCards (modifiedCards){
+    const newModifiedCards = modifiedCards.filter(e=>savedCards.findIndex(i=>i.nameRU === e.nameRU) === -1);
+    const cardsAndSavedCards = newModifiedCards.concat(savedCards);
+    setCurrentCards(cardsAndSavedCards);
+    return cardsAndSavedCards
+  }
   function handleSearchSubmit(string) {
-    
+    setIsSearching(true);
     localStorage.setItem("searchString", string);
-    localStorage.setItem("filterState", JSON.stringify(filterState));
-    setIsSearching(true)
-    getCards()
-      .then((cards) => {
-        
-        cards.forEach((el) => {
-          const thumbnail = el.image.formats.thumbnail.url;
-          el.image = `https://api.nomoreparties.co/${el.image.url}`;
-          el.thumbnail = `https://api.nomoreparties.co/${thumbnail}`;
-          el.movieId = el.id;
-          delete el.id;
-          delete el.created_at;
-          delete el.updated_at;
+    const state = localStorage.getItem("filterState");
+   if (!modifiedCards) {
+      getCards()
+        .then((cards) => {
+          const modifiedCards=modifyCards(cards);
+          localStorage.setItem('allCards', JSON.stringify(modifiedCards))
+          const currentCards = compileCards(modifiedCards);
+          filterCards(currentCards, string, state);
+        })
+        .catch((err) => {
+          setIsSearching(false);
+          setTipText(
+            "Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз."
+          );
+          console.log(err);
         });
-        localStorage.setItem("allCards", JSON.stringify(cards));
-        cards.forEach((el) => {
-          if (savedCards.includes((item) => item.movieId === el.movieId)) {
-            el.remove();
-          }
-        });
-        const cardsAndSavedCards = cards.concat(savedCards);
-        const newCards = filterItems(cardsAndSavedCards, string);
-        localStorage.setItem("searchedCards", JSON.stringify(newCards));
-        if (filterState) {
-          const shortFilms = filterDuration(newCards);
-          if (shortFilms.length !== 0) {
-            setCards(shortFilms);
-            setIsSearching(false);
-            setOnSearch(true);
-            localStorage.setItem("searchedCards", JSON.stringify(shortFilms));
-          } else {
-            setTipText("Ничего не найдено");
-            setOnSearch(true);
-          }
-        } else {
-          if (newCards.length !== 0) {
-            setCards(newCards);
-            setOnSearch(true);
-            setIsSearching(false);
-          } else {
-            setTipText("Ничего не найдено");
-            setOnSearch(true);
-            setIsSearching(false)
-          }
-        }
-      })
+    } else {
+      const modifiedCardsArr = JSON.parse(modifiedCards);
+      const currentCards = compileCards(modifiedCardsArr);
+          filterCards(currentCards, string, state);
+     }
+  }
+
+  function handleCardSave(cardID) {
+   const searchedCards = localStorage.getItem("searchedCards");
+   const searchedCardsArr = JSON.parse(searchedCards);
+     const cardToSave = searchedCardsArr.find((el) => el.movieId ===cardID);
+     const cardIndex = searchedCardsArr.findIndex((el)=>el.movieId ===cardID);
+      sendUserCard(cardToSave)
+      .then((savedCard) => {
+        searchedCardsArr.splice(cardIndex, 1, savedCard);
+        setFilteredCards(searchedCardsArr);
+        localStorage.setItem("searchedCards", JSON.stringify(searchedCardsArr))
+         })
       .catch((err) => {
-        setIsSearching(false)
-        setTipText(
-          "Во время запроса произошла ошибка. Возможно, проблема с соединением или сервер недоступен. Подождите немного и попробуйте ещё раз."
-        );
         console.log(err);
       });
   }
 
-  function handleEditUserData(userData){
- sendUserInfo(userData)
- .then((user)=>{
-setUxPopupText("Данные пользователя успешно обновлены");
-setIsUxPopupOpen(true);
-setCurrentUser(user)
- })
- .catch((err)=>{
-  setUxPopupText("Не удалось обновить данные пользователя")
-  setIsUxPopupOpen(true)
-  console.log(err)
- })
+  function handleCardDelete(api_id) {
+    //const string = localStorage.getItem("searchString");
+    //const state = localStorage.getItem("filterState");
+    const searchedCards = localStorage.getItem("searchedCards");
+    const searchedCardsArr = JSON.parse(searchedCards);
+    const cardToDelete= searchedCardsArr.find((el) => el._id === api_id);
+    const cardIndex = searchedCardsArr.findIndex((el)=>el._id === api_id);
+    //const modifiedCardsArr = JSON.parse(modifiedCards);
+    deleteUserCard(api_id)
+      .then((userCards) => {
+        delete cardToDelete._id;
+        delete cardToDelete.owner;
+        delete cardToDelete.__v;
+        searchedCardsArr.splice(cardIndex, 1, cardToDelete);
+        setFilteredCards(searchedCardsArr);
+        localStorage.setItem("searchedCards", JSON.stringify(searchedCardsArr))
+         })
+      .catch((err) => {
+        console.log(err);
+      });
+  }
+
+ 
+  function handleFilterClick(state) {
+    const string = localStorage.getItem("searchString");
+      filterCards(string, state);  
+  }
+
+  function handleEditUserData(userData) {
+    sendUserInfo(userData)
+      .then((user) => {
+        setUxPopupText("Данные пользователя успешно обновлены");
+        setIsUxPopupOpen(true);
+        setCurrentUser(user);
+      })
+      .catch((err) => {
+        setUxPopupText("Не удалось обновить данные пользователя");
+        setIsUxPopupOpen(true);
+        console.log(err);
+      });
+  }
+  function openNavigation() {
+    setIsNavigationOpen(true);
+  }
+  function closeNavigation() {
+    setIsNavigationOpen(false);
+  }
+  function closeUxPopup() {
+    setIsUxPopupOpen(false);
   }
   function handleCheckOut() {
     localStorage.clear();
-    setCards([])
+    setFilteredCards([]);
     setLoggedIn(false);
-    navigate("/", {replace:true});
+    navigate("/", { replace: true });
+  }
+  function handleLogin(userData) {
+    login(userData)
+      .then((res) => {
+        localStorage.setItem("jwt", res.token);
+        setLoggedIn(true);
+        setCurrentUser({ userData });
+      })
+      .then(() => {
+        navigate("/movies", { replace: true });
+      })
+      .catch((err) => {
+        setUxPopupText(`Не удалось войти. ${err}`);
+        setIsUxPopupOpen(true);
+        console.log(err);
+      });
+  }
+  function handleRegister(userData) {
+    register(userData)
+      .then(() => {
+        handleLogin({ email: userData.email, password: userData.password });
+      })
+      .catch((err) => {
+        setUxPopupText(`Не удалось зарегистрироваться. ${err}`);
+        setIsUxPopupOpen(true);
+        console.log(err);
+      });
   }
 
   return (
@@ -282,62 +294,92 @@ setCurrentUser(user)
         <Header onOpenNavigation={openNavigation} loggedIn={loggedIn} />
         <main>
           <Routes>
-         
             <Route
               path="/saved-movies"
-              element={loggedIn?
-                <ProtectedRouteElement
-                  element={SavedMovies}
-                  cards={savedCards}
-                  loggedIn={loggedIn}
-                  onCardDelete={handleCardDelete}
-                  filterItems={filterItems}
-                  filterDuration={filterDuration}
-                />:<></>
+              element={
+                loggedIn ? (
+                  <ProtectedRouteElement
+                    element={SavedMovies}
+                    cards={savedCards}
+                    loggedIn={loggedIn}
+                    onCardDelete={handleCardDelete}
+                    filterItems={filterNames}
+                    filterDuration={filterDuration}
+                  />
+                ) : (
+                  <></>
+                )
               }
             />
             <Route
               path="/movies"
-              element={loggedIn?
-                <ProtectedRouteElement
-                  element={Movies}
-                  cards={cards}
-                  loggedIn={loggedIn}
-                  onSearchSubmit={handleSearchSubmit}
-                  onFilterClick={handleFilterClick}
-                  onSearch={onSearch}
-                  tipText={tipText}
-                  onCardSave={handleCardSave}
-                  onCardDelete={handleCardDelete}
-                  isSearching={isSearching}
-                />:<></>
+              element={
+                loggedIn ? (
+                  <ProtectedRouteElement
+                    element={Movies}
+                    cards={filteredCards}
+                    loggedIn={loggedIn}
+                    onSearchSubmit={handleSearchSubmit}
+                    onFilterClick={handleFilterClick}
+                    onSearch={onSearch}
+                    tipText={tipText}
+                    onCardSave={handleCardSave}
+                    onCardDelete={handleCardDelete}
+                    isSearching={isSearching}
+                  />
+                ) : (
+                  <></>
+                )
               }
             />
 
             <Route
               path="/profile"
-              element={loggedIn?
-                <ProtectedRouteElement
-                  element={Profile}
-                  user={currentUser}
-                  loggedIn={loggedIn}
-                  onCheckout={handleCheckOut}
-                  onSubmit={handleEditUserData}
-                />:<></>
+              element={
+                loggedIn ? (
+                  <ProtectedRouteElement
+                    element={Profile}
+                    user={currentUser}
+                    loggedIn={loggedIn}
+                    onCheckout={handleCheckOut}
+                    onSubmit={handleEditUserData}
+                  />
+                ) : (
+                  <></>
+                )
               }
             />
-           
-            <Route path="/signin" element={loggedIn?<RedirectComponent/>:<Login onLogin={handleLogin} loggedIn={loggedIn}/>} />
+
+            <Route
+              path="/signin"
+              element={
+                loggedIn ? (
+                  <RedirectComponent />
+                ) : (
+                  <Login onLogin={handleLogin} loggedIn={loggedIn} />
+                )
+              }
+            />
             <Route
               path="/signup"
-              element={loggedIn?<RedirectComponent/>:<Register onRegister={handleRegister} />}
+              element={
+                loggedIn ? (
+                  <RedirectComponent />
+                ) : (
+                  <Register onRegister={handleRegister} />
+                )
+              }
             />
-          
-          <Route path="/" element={<Main />} />
 
-            <Route path="*" element={<ErrorPage/>}/>
+            <Route path="/" element={<Main />} />
+
+            <Route path="*" element={<ErrorPage />} />
           </Routes>
-          <UxPopup isOpen={isUxPopupOpen} text={uxPopupText} onClose={closeUxPopup}/>
+          <UxPopup
+            isOpen={isUxPopupOpen}
+            text={uxPopupText}
+            onClose={closeUxPopup}
+          />
           <Navigation isOpen={isNavigationOpen} onClose={closeNavigation} />
         </main>
         <Footer />

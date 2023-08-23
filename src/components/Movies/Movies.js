@@ -39,6 +39,7 @@ export default function Movies({
     const newCardNumber = cardsToShow.length + additionalCardNumber;
     setCardsToShow(cardsTotal.slice(0, newCardNumber));
   }
+
   if(isSearching){
     return (
       <section className="movies">
@@ -71,7 +72,7 @@ export default function Movies({
     return (
       <section className="movies">
         <PageWithMovies onSearchSubmit={onSearchSubmit} onFilterClick={onFilterClick}>
-         {onSearch?<SearchTip tipText={tipText}/>:<SearchTip tipText="Введите запрос для поска фильма"/>}
+         {onSearch?<SearchTip tipText={tipText}/>:<SearchTip tipText="Введите запрос для поиска фильма"/>}
         </PageWithMovies>
       </section>
     );

@@ -4,9 +4,19 @@ export default function FilterCheckbox(props) {
   const [filterChecked, setFilterChecked] = useState(false);
   const searchedFilterState = localStorage.getItem("filterState");
   
+
   useEffect(()=>{
-    props.forSavedMovies?setFilterChecked(false):setFilterChecked(JSON.parse(searchedFilterState))
-  }, [])
+    if (JSON.parse(searchedFilterState) === false){
+      setFilterChecked(false)
+    } else if(props.forSavedMovies || !searchedFilterState){
+    setFilterChecked(false)
+    localStorage.setItem("filterState", JSON.stringify(false))}
+    else{
+    setFilterChecked(true)
+    localStorage.setItem("filterState", JSON.stringify(true))
+  }}, [props.forSavedMovies, searchedFilterState])
+
+  
   
   function handleFilterClick(){
     setFilterChecked(!filterChecked);

@@ -13,7 +13,7 @@ export default function MoviesCard(props) {
   const [isCardSaved, setIsCardSaved] = useState(false);
   
 useEffect(()=>{
-if(currentUser._id===props.owner&&props.owner!==undefined){setIsCardSaved(true)}else{
+if(props.owner){setIsCardSaved(true)}else{
   setIsCardSaved(false)
 }
 }, [props, currentUser]
