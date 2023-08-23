@@ -211,22 +211,24 @@ const [isSendingForm, setIsSendingForm]=useState(false);
   }
 
   function handleCardDelete(api_id) {
-    const searchedCards = localStorage.getItem("searchedCards");
-    const searchedCardsArr = JSON.parse(searchedCards);
-    const cardToDelete = savedCards.find((el) => el._id === api_id);
-    const cardIndex = searchedCardsArr.findIndex((el) => el._id === api_id);
+      const cardToDelete = savedCards.find((el) => el._id === api_id);
     deleteUserCard(api_id)
       .then((userCards) => {
-        delete cardToDelete._id;
-        delete cardToDelete.owner;
-        delete cardToDelete.__v;
-        searchedCardsArr.splice(cardIndex, 1, cardToDelete);
-        setFilteredCards(searchedCardsArr);
-        localStorage.setItem("searchedCards", JSON.stringify(searchedCardsArr));
         const currentUserCards = userCards.filter(
           (el) => el.owner === currentUser._id
         );
         setSavedCards(currentUserCards);
+        const searchedCards = localStorage.getItem("searchedCards");
+        if (searchedCards){
+         const searchedCardsArr = JSON.parse(searchedCards);
+        delete cardToDelete._id;
+        delete cardToDelete.owner;
+        delete cardToDelete.__v;
+        const cardIndex = searchedCardsArr.findIndex((el) => el._id === api_id);
+        searchedCardsArr.splice(cardIndex, 1, cardToDelete);
+        setFilteredCards(searchedCardsArr);
+        localStorage.setItem("searchedCards", JSON.stringify(searchedCardsArr));
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -311,7 +313,6 @@ const [isSendingForm, setIsSendingForm]=useState(false);
             <Route
               path="/saved-movies"
               element={
-                loggedIn ? (
                   <ProtectedRouteElement
                     element={SavedMovies}
                     cards={savedCards}
@@ -320,16 +321,12 @@ const [isSendingForm, setIsSendingForm]=useState(false);
                     filterItems={filterNames}
                     filterDuration={filterDuration}
                   />
-                ) : (
-                  <></>
-                )
               }
             />
             <Route
               path="/movies"
               element={
-                loggedIn ? (
-                  <ProtectedRouteElement
+                    <ProtectedRouteElement
                     element={Movies}
                     cards={filteredCards}
                     loggedIn={loggedIn}
@@ -341,16 +338,12 @@ const [isSendingForm, setIsSendingForm]=useState(false);
                     onCardDelete={handleCardDelete}
                     isSearching={isSearching}
                   />
-                ) : (
-                  <></>
-                )
               }
             />
 
             <Route
               path="/profile"
               element={
-                loggedIn ? (
                   <ProtectedRouteElement
                     element={Profile}
                     isSendingForm={isSendingForm}
@@ -359,9 +352,6 @@ const [isSendingForm, setIsSendingForm]=useState(false);
                     onCheckout={handleCheckOut}
                     onSubmit={handleEditUserData}
                   />
-                ) : (
-                  <></>
-                )
               }
             />
 

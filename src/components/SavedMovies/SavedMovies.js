@@ -20,9 +20,20 @@ export default function SavedMovies({
 useEffect(()=>{
   if(savedSearchString){
     const searchedCards = filterItems(cards, savedSearchString);
-    setCardsToShow(searchedCards)
+    if (filterState===false){
+    setCardsToShow(searchedCards)}
+    else{
+   const filteredDurationCards=filterDuration(searchedCards);
+   setCardsToShow(filteredDurationCards);
+    }
   }else{
+    if(filterState===false){
   setCardsToShow(cards)}
+  else{
+    const filteredDurationCards=filterDuration(cards);
+    setCardsToShow(filteredDurationCards);
+  }
+  }
 },[cards])
  
   function handleFilterClick(state) {

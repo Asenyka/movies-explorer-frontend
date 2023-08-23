@@ -22,7 +22,7 @@ export default function Movies({
   const cardNumber = windowWidth < 480 ? 5 : windowWidth < 1280 ? 8 : 12;
   const additionalCardNumber = windowWidth < 1280 ? 2 : 3;
   const searchedCards = localStorage.getItem("searchedCards");
-  ;
+  
 
   useEffect(() => {
     if (cards.length!==0) {
