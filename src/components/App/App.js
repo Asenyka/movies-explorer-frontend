@@ -51,7 +51,6 @@ const [isSendingForm, setIsSendingForm]=useState(false);
         .then(() => {
           setLoggedIn(true);
         })
-        .then(() => {})
         .catch((err) => {
           console.log(err);
         });
@@ -71,7 +70,6 @@ const [isSendingForm, setIsSendingForm]=useState(false);
   }, [loggedIn]);
 
   useEffect(() => {
-    //console.log(currentUser._id)
     if (loggedIn) {
       getUserCards()
         .then((userCards) => {
@@ -85,25 +83,7 @@ const [isSendingForm, setIsSendingForm]=useState(false);
         });
     }
   }, [loggedIn, setSavedCards, currentUser._id]);
-  //При закрузке страницы, если есть в локальном хранилище карточки, изменении массива modifiedCards в локальном хранилище или savedCards state,  происходит создание массива currentCards
-  //Дальше при поиске он используется как основа для поиска и создания массива filteredCards который передается на отображение
-
-  /* useEffect(() => {
-   console.log(modifiedCards)
-    if (modifiedCards) {
-      const modifiedCardsArr = JSON.parse(modifiedCards);
-      modifiedCardsArr.forEach((el) => {
-        if (savedCards.includes((item) => item.movieId === el.movieId)) {
-          el.remove();
-        }
-      });
-      const cardsAndSavedCards = modifiedCardsArr.concat(savedCards);
-      setCurrentCards(cardsAndSavedCards);
-    } else{
-      setCurrentCards([])
-    }
-  }, [savedCards, modifiedCards]);
-  */
+ 
 
   function modifyCards(cards) {
     cards.forEach((el) => {
@@ -116,7 +96,6 @@ const [isSendingForm, setIsSendingForm]=useState(false);
       delete el.updated_at;
     });
 
-    //  localStorage.setItem("allCards", JSON.stringify(cards));
     return cards;
   }
   function filterNames(arr, query) {
@@ -137,7 +116,7 @@ const [isSendingForm, setIsSendingForm]=useState(false);
         setFilteredCards(shortFilms);
         setIsSearching(false);
         setOnSearch(true);
-        localStorage.setItem("searchedCards", JSON.stringify(newCards));
+        localStorage.setItem("searchedCards", JSON.stringify(shortFilms));
 
       } else {
         setTipText("Ничего не найдено");
@@ -175,7 +154,7 @@ const [isSendingForm, setIsSendingForm]=useState(false);
           const modifiedCards = modifyCards(cards);
           localStorage.setItem("allCards", JSON.stringify(modifiedCards));
           const currentCards = compileCards(modifiedCards);
-          filterCards(currentCards, string, state);
+          filterCards(currentCards, string, JSON.parse(state));
         })
         .catch((err) => {
           setIsSearching(false);
@@ -187,14 +166,14 @@ const [isSendingForm, setIsSendingForm]=useState(false);
     } else {
       const modifiedCardsArr = JSON.parse(modifiedCards);
       const currentCards = compileCards(modifiedCardsArr);
-      filterCards(currentCards, string, state);
+      filterCards(currentCards, string, JSON.parse(state));
     }
   }
 
   function handleCardSave(cardID) {
     const searchedCards = localStorage.getItem("searchedCards");
     const searchedCardsArr = JSON.parse(searchedCards);
-    const savedCardsCopy = savedCards;
+    const savedCardsCopy = Array.from(savedCards);
     const cardToSave = searchedCardsArr.find((el) => el.movieId === cardID);
     const cardIndex = searchedCardsArr.findIndex((el) => el.movieId === cardID);
     sendUserCard(cardToSave)
@@ -204,6 +183,12 @@ const [isSendingForm, setIsSendingForm]=useState(false);
         localStorage.setItem("searchedCards", JSON.stringify(searchedCardsArr));
         savedCardsCopy.unshift(savedCard);
         setSavedCards(savedCardsCopy);
+        if (currentCards.length!==0) {
+          const currentCardsCopy = Array.from(currentCards);
+          const cardIndex2 = currentCardsCopy.findIndex((el) => el.movieId === cardID);
+          currentCardsCopy.splice(cardIndex2, 1, savedCard);
+          setCurrentCards(currentCardsCopy);
+        }
       })
       .catch((err) => {
         console.log(err);
@@ -236,10 +221,20 @@ const [isSendingForm, setIsSendingForm]=useState(false);
   }
 
   function handleFilterClick(state) {
-    const searchedCards = localStorage.getItem("searchedCards");
-    const searchedCardsArr = JSON.parse(searchedCards);
+    localStorage.setItem("filterState", JSON.stringify(state));
     const string = localStorage.getItem("searchString");
-    filterCards(searchedCardsArr, string, state);
+    const searchedCards = localStorage.getItem("searchedCards");
+    if(currentCards.length!==0){
+     const cardsToFilter = Array.from(currentCards);
+    console.log(cardsToFilter)
+    filterCards(cardsToFilter, string, state)}
+    else if(searchedCards){
+      const cardsToFilter = JSON.parse(searchedCards);
+      filterCards(cardsToFilter, string, state);
+    }
+    
+    
+    
   }
 
   function handleEditUserData(userData) {
@@ -267,6 +262,7 @@ const [isSendingForm, setIsSendingForm]=useState(false);
   function handleCheckOut() {
     localStorage.clear();
     setFilteredCards([]);
+    setCurrentCards([]);
     setLoggedIn(false);
     navigate("/", { replace: true });
   }
@@ -303,7 +299,7 @@ const [isSendingForm, setIsSendingForm]=useState(false);
         console.log(err);
       });
   }
-
+console.log(loggedIn)
   return (
     <CurrentUserContext.Provider value={currentUser || ""}>
       <div className="App">
@@ -312,7 +308,7 @@ const [isSendingForm, setIsSendingForm]=useState(false);
           <Routes>
             <Route
               path="/saved-movies"
-              element={
+              element={loggedIn?
                   <ProtectedRouteElement
                     element={SavedMovies}
                     cards={savedCards}
@@ -320,12 +316,13 @@ const [isSendingForm, setIsSendingForm]=useState(false);
                     onCardDelete={handleCardDelete}
                     filterItems={filterNames}
                     filterDuration={filterDuration}
-                  />
+                  />:
+                  <RedirectComponent/>
               }
             />
             <Route
               path="/movies"
-              element={
+              element={loggedIn?
                     <ProtectedRouteElement
                     element={Movies}
                     cards={filteredCards}
@@ -337,13 +334,14 @@ const [isSendingForm, setIsSendingForm]=useState(false);
                     onCardSave={handleCardSave}
                     onCardDelete={handleCardDelete}
                     isSearching={isSearching}
-                  />
+                  />:
+                  <></>
               }
             />
 
             <Route
               path="/profile"
-              element={
+              element={loggedIn?
                   <ProtectedRouteElement
                     element={Profile}
                     isSendingForm={isSendingForm}
@@ -351,7 +349,8 @@ const [isSendingForm, setIsSendingForm]=useState(false);
                     loggedIn={loggedIn}
                     onCheckout={handleCheckOut}
                     onSubmit={handleEditUserData}
-                  />
+                  />:
+                  <RedirectComponent/>
               }
             />
 
