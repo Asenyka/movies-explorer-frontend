@@ -2,48 +2,43 @@ import Button from "../Button/Button";
 import Form from "../Form/Form";
 import Input from "../Input/Input";
 import { useContext, useState, useEffect } from "react";
-import useFormWithValidation from "../../hooks/useFormWithValidation"
+import useFormWithValidation from "../../hooks/useFormWithValidation";
 import CurrentUserContext from "../../contexts/CurrentUserContext";
 export default function Profile(props) {
   const currentUser = useContext(CurrentUserContext);
-  const {values, handleInputChange, resetForm, errors, isFormValid} = useFormWithValidation();
-  const [isDisabled, setIsDisabled] =useState(true);
+  const { values, handleInputChange, resetForm, errors, isFormValid } =
+    useFormWithValidation();
+  const [isDisabled, setIsDisabled] = useState(true);
   const [isEditFormValid, setIsEditFormValid] = useState(false);
-    const [isFormButtonInvisible, setIsFormButtonInvisible] = useState(true);
-  const newDataMarker=values.name !== currentUser.name || values.email !== currentUser.email
+  const [isFormButtonInvisible, setIsFormButtonInvisible] = useState(true);
+  const newDataMarker =
+    values.name !== currentUser.name || values.email !== currentUser.email;
 
-  
-  useEffect(()=>{
-    resetForm(currentUser)
-  }, [resetForm, currentUser])
+  useEffect(() => {
+    resetForm(currentUser);
+  }, [resetForm, currentUser]);
 
-useEffect(()=>
-{
-  if(newDataMarker&&isFormValid){
-  setIsEditFormValid(true);
-  }
-  else{
+  useEffect(() => {
+    if (newDataMarker && isFormValid) {
+      setIsEditFormValid(true);
+    } else {
+      setIsEditFormValid(false);
+    }
+  }, [newDataMarker, isFormValid]);
 
-    setIsEditFormValid(false);
-  }
-
-},[newDataMarker, isFormValid]
-)
- 
   function handleEditClick(e) {
     e.preventDefault();
     setIsFormButtonInvisible(false);
     setIsDisabled(false);
   }
-  
-  function editProfileData(e){
-    e.preventDefault();
- const newUserData={name:values.name, email:values.email}
-props.onSubmit(newUserData)
-    setIsFormButtonInvisible(true)
-    setIsDisabled(true)
-  }
 
+  function editProfileData(e) {
+    e.preventDefault();
+    const newUserData = { name: values.name, email: values.email };
+    props.onSubmit(newUserData);
+    setIsFormButtonInvisible(true);
+    setIsDisabled(true);
+  }
 
   return (
     <section className="profile">
@@ -52,22 +47,22 @@ props.onSubmit(newUserData)
         heading={`Привет, ${currentUser.name}!`}
         buttonText="Сохранить"
         isFormButtonInvisible={isFormButtonInvisible}
-        isValid={isEditFormValid}  
-        onSubmit={editProfileData}     
+        isValid={isEditFormValid}
+        onSubmit={editProfileData}
       >
         <Input
-         type="text"
-         disabled={isDisabled}
+          type="text"
+          disabled={isDisabled}
           form="profile"
           name="name"
           placeholder="Введите имя"
           label="Имя"
-          value={values?values.name:''}
+          value={values ? values.name : ""}
           onChange={handleInputChange}
           error={errors.name}
           minLength={2}
           maxLength={32}
-         />
+        />
         <Input
           form="profile"
           name="email"
@@ -75,11 +70,10 @@ props.onSubmit(newUserData)
           disabled={isDisabled}
           placeholder="Введите e-mail"
           label="E-mail"
-          value={values?values.email:''}
+          value={values ? values.email : ""}
           onChange={handleInputChange}
           error={errors.email}
-     
-          />
+        />
       </Form>
       {isFormButtonInvisible ? (
         <div className="profile__buttons">

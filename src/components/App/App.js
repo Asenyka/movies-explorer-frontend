@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate, useLocation } from "react-router-dom";
 
 import "./App.css";
 import CurrentUserContext from "../../contexts/CurrentUserContext";
@@ -31,7 +31,7 @@ function App() {
   const [uxPopupText, setUxPopupText] = useState("");
   const [loggedIn, setLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState({});
-const [isSendingForm, setIsSendingForm]=useState(false);
+  const [isSendingForm, setIsSendingForm] = useState(false);
   const [currentCards, setCurrentCards] = useState([]);
   const [savedCards, setSavedCards] = useState([]);
   const [filteredCards, setFilteredCards] = useState([]);
@@ -42,6 +42,7 @@ const [isSendingForm, setIsSendingForm]=useState(false);
 
   const [tipText, setTipText] = useState("");
 
+  const location = useLocation();
   const navigate = useNavigate();
   const jwt = localStorage.getItem("jwt");
 
@@ -50,12 +51,13 @@ const [isSendingForm, setIsSendingForm]=useState(false);
       checkToken(jwt)
         .then(() => {
           setLoggedIn(true);
+          navigate(location.pathname);
         })
         .catch((err) => {
           console.log(err);
         });
     }
-  }, [jwt]);
+  }, []);
 
   useEffect(() => {
     if (loggedIn) {
@@ -83,7 +85,6 @@ const [isSendingForm, setIsSendingForm]=useState(false);
         });
     }
   }, [loggedIn, setSavedCards, currentUser._id]);
- 
 
   function modifyCards(cards) {
     cards.forEach((el) => {
@@ -117,7 +118,6 @@ const [isSendingForm, setIsSendingForm]=useState(false);
         setIsSearching(false);
         setOnSearch(true);
         localStorage.setItem("searchedCards", JSON.stringify(shortFilms));
-
       } else {
         setTipText("Ничего не найдено");
         setOnSearch(true);
@@ -128,7 +128,7 @@ const [isSendingForm, setIsSendingForm]=useState(false);
         setOnSearch(true);
         setIsSearching(false);
         localStorage.setItem("searchedCards", JSON.stringify(newCards));
-        } else {
+      } else {
         setTipText("Ничего не найдено");
         setOnSearch(true);
         setIsSearching(false);
@@ -183,9 +183,11 @@ const [isSendingForm, setIsSendingForm]=useState(false);
         localStorage.setItem("searchedCards", JSON.stringify(searchedCardsArr));
         savedCardsCopy.unshift(savedCard);
         setSavedCards(savedCardsCopy);
-        if (currentCards.length!==0) {
+        if (currentCards.length !== 0) {
           const currentCardsCopy = Array.from(currentCards);
-          const cardIndex2 = currentCardsCopy.findIndex((el) => el.movieId === cardID);
+          const cardIndex2 = currentCardsCopy.findIndex(
+            (el) => el.movieId === cardID
+          );
           currentCardsCopy.splice(cardIndex2, 1, savedCard);
           setCurrentCards(currentCardsCopy);
         }
@@ -196,7 +198,7 @@ const [isSendingForm, setIsSendingForm]=useState(false);
   }
 
   function handleCardDelete(api_id) {
-      const cardToDelete = savedCards.find((el) => el._id === api_id);
+    const cardToDelete = savedCards.find((el) => el._id === api_id);
     deleteUserCard(api_id)
       .then((userCards) => {
         const currentUserCards = userCards.filter(
@@ -204,15 +206,20 @@ const [isSendingForm, setIsSendingForm]=useState(false);
         );
         setSavedCards(currentUserCards);
         const searchedCards = localStorage.getItem("searchedCards");
-        if (searchedCards){
-         const searchedCardsArr = JSON.parse(searchedCards);
-        delete cardToDelete._id;
-        delete cardToDelete.owner;
-        delete cardToDelete.__v;
-        const cardIndex = searchedCardsArr.findIndex((el) => el._id === api_id);
-        searchedCardsArr.splice(cardIndex, 1, cardToDelete);
-        setFilteredCards(searchedCardsArr);
-        localStorage.setItem("searchedCards", JSON.stringify(searchedCardsArr));
+        if (searchedCards) {
+          const searchedCardsArr = JSON.parse(searchedCards);
+          delete cardToDelete._id;
+          delete cardToDelete.owner;
+          delete cardToDelete.__v;
+          const cardIndex = searchedCardsArr.findIndex(
+            (el) => el._id === api_id
+          );
+          searchedCardsArr.splice(cardIndex, 1, cardToDelete);
+          setFilteredCards(searchedCardsArr);
+          localStorage.setItem(
+            "searchedCards",
+            JSON.stringify(searchedCardsArr)
+          );
         }
       })
       .catch((err) => {
@@ -224,17 +231,14 @@ const [isSendingForm, setIsSendingForm]=useState(false);
     localStorage.setItem("filterState", JSON.stringify(state));
     const string = localStorage.getItem("searchString");
     const searchedCards = localStorage.getItem("searchedCards");
-    if(currentCards.length!==0){
-     const cardsToFilter = Array.from(currentCards);
-    console.log(cardsToFilter)
-    filterCards(cardsToFilter, string, state)}
-    else if(searchedCards){
+    if (currentCards.length !== 0) {
+      const cardsToFilter = Array.from(currentCards);
+      console.log(cardsToFilter);
+      filterCards(cardsToFilter, string, state);
+    } else if (searchedCards) {
       const cardsToFilter = JSON.parse(searchedCards);
       filterCards(cardsToFilter, string, state);
     }
-    
-    
-    
   }
 
   function handleEditUserData(userData) {
@@ -267,13 +271,13 @@ const [isSendingForm, setIsSendingForm]=useState(false);
     navigate("/", { replace: true });
   }
   function handleLogin(userData) {
-    setIsSendingForm(true)
+    setIsSendingForm(true);
     login(userData)
       .then((res) => {
         localStorage.setItem("jwt", res.token);
         setLoggedIn(true);
         setCurrentUser({ userData });
-        setIsSendingForm(false)
+        setIsSendingForm(false);
       })
       .then(() => {
         navigate("/movies", { replace: true });
@@ -281,25 +285,25 @@ const [isSendingForm, setIsSendingForm]=useState(false);
       .catch((err) => {
         setUxPopupText(`Не удалось войти. ${err}`);
         setIsUxPopupOpen(true);
-        setIsSendingForm(false)
+        setIsSendingForm(false);
         console.log(err);
       });
   }
   function handleRegister(userData) {
-    setIsSendingForm(true)
+    setIsSendingForm(true);
     register(userData)
       .then(() => {
         handleLogin({ email: userData.email, password: userData.password });
-        setIsSendingForm(false)
+        setIsSendingForm(false);
       })
       .catch((err) => {
         setUxPopupText(`Не удалось зарегистрироваться. ${err}`);
         setIsUxPopupOpen(true);
-        setIsSendingForm(false)
+        setIsSendingForm(false);
         console.log(err);
       });
   }
-console.log(loggedIn)
+  console.log(loggedIn);
   return (
     <CurrentUserContext.Provider value={currentUser || ""}>
       <div className="App">
@@ -308,49 +312,46 @@ console.log(loggedIn)
           <Routes>
             <Route
               path="/saved-movies"
-              element={loggedIn?
-                  <ProtectedRouteElement
-                    element={SavedMovies}
-                    cards={savedCards}
-                    loggedIn={loggedIn}
-                    onCardDelete={handleCardDelete}
-                    filterItems={filterNames}
-                    filterDuration={filterDuration}
-                  />:
-                  <RedirectComponent/>
+              element={
+                <ProtectedRouteElement
+                  element={SavedMovies}
+                  cards={savedCards}
+                  loggedIn={loggedIn}
+                  onCardDelete={handleCardDelete}
+                  filterItems={filterNames}
+                  filterDuration={filterDuration}
+                />
               }
             />
             <Route
               path="/movies"
-              element={loggedIn?
-                    <ProtectedRouteElement
-                    element={Movies}
-                    cards={filteredCards}
-                    loggedIn={loggedIn}
-                    onSearchSubmit={handleSearchSubmit}
-                    onFilterClick={handleFilterClick}
-                    onSearch={onSearch}
-                    tipText={tipText}
-                    onCardSave={handleCardSave}
-                    onCardDelete={handleCardDelete}
-                    isSearching={isSearching}
-                  />:
-                  <></>
+              element={
+                <ProtectedRouteElement
+                  element={Movies}
+                  cards={filteredCards}
+                  loggedIn={loggedIn}
+                  onSearchSubmit={handleSearchSubmit}
+                  onFilterClick={handleFilterClick}
+                  onSearch={onSearch}
+                  tipText={tipText}
+                  onCardSave={handleCardSave}
+                  onCardDelete={handleCardDelete}
+                  isSearching={isSearching}
+                />
               }
             />
 
             <Route
               path="/profile"
-              element={loggedIn?
-                  <ProtectedRouteElement
-                    element={Profile}
-                    isSendingForm={isSendingForm}
-                    user={currentUser}
-                    loggedIn={loggedIn}
-                    onCheckout={handleCheckOut}
-                    onSubmit={handleEditUserData}
-                  />:
-                  <RedirectComponent/>
+              element={
+                <ProtectedRouteElement
+                  element={Profile}
+                  isSendingForm={isSendingForm}
+                  user={currentUser}
+                  loggedIn={loggedIn}
+                  onCheckout={handleCheckOut}
+                  onSubmit={handleEditUserData}
+                />
               }
             />
 
@@ -360,7 +361,11 @@ console.log(loggedIn)
                 loggedIn ? (
                   <RedirectComponent />
                 ) : (
-                  <Login onLogin={handleLogin} loggedIn={loggedIn} isSendingForm={isSendingForm} />
+                  <Login
+                    onLogin={handleLogin}
+                    loggedIn={loggedIn}
+                    isSendingForm={isSendingForm}
+                  />
                 )
               }
             />
@@ -370,7 +375,10 @@ console.log(loggedIn)
                 loggedIn ? (
                   <RedirectComponent />
                 ) : (
-                  <Register onRegister={handleRegister} isSendingForm={isSendingForm} />
+                  <Register
+                    onRegister={handleRegister}
+                    isSendingForm={isSendingForm}
+                  />
                 )
               }
             />

@@ -1,11 +1,15 @@
 import MoviesCard from "../MoviesCard/MoviesCard";
 
-export default function MoviesCardList({ cards, forSavedMovies, onCardSave, onCardDelete }) {
-  
+export default function MoviesCardList({
+  cards,
+  forSavedMovies,
+  onCardSave,
+  onCardDelete,
+}) {
   return (
     <ul className="card-list" aria-label="Галлерея кинофильмов">
       {cards.map((card) => (
-          <MoviesCard
+        <MoviesCard
           key={card.movieId}
           id={card.movieId}
           owner={card.owner}
@@ -17,10 +21,9 @@ export default function MoviesCardList({ cards, forSavedMovies, onCardSave, onCa
           forSavedMovies={forSavedMovies}
           onSave={onCardSave}
           onDelete={onCardDelete}
-          api_id={card._id||''}
+          api_id={card._id || ""}
         />
-      )
-      )}
+      ))}
     </ul>
   );
 }

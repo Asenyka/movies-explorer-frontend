@@ -4,22 +4,22 @@ import Form from "../Form/Form";
 import Input from "../Input/Input";
 
 export default function SearchForm(props) {
-const searchedString = localStorage.getItem("searchString");
-const {values, handleInputChange, resetForm, errors, isFormValid } = useFormWithValidation();
+  const searchedString = localStorage.getItem("searchString");
+  const { values, handleInputChange, resetForm, errors, isFormValid } =
+    useFormWithValidation();
 
-  useEffect(()=>{
-    if(searchedString===null||props.forSavedMovies)
-    {
-      resetForm({})
-    }else{
-      resetForm({searchField:searchedString})
+  useEffect(() => {
+    if (searchedString === null || props.forSavedMovies) {
+      resetForm({});
+    } else {
+      resetForm({ searchField: searchedString });
     }
-}, [])
+  }, []);
 
- function  handleSearch(e){
-e.preventDefault();
-props.onSearchSubmit(values.searchField)
-}
+  function handleSearch(e) {
+    e.preventDefault();
+    props.onSearchSubmit(values.searchField);
+  }
   return (
     <div className="searchform">
       <Form
@@ -39,7 +39,6 @@ props.onSearchSubmit(values.searchField)
           value={values.searchField}
           onChange={handleInputChange}
           error={errors.searchField}
-          
         />
       </Form>
     </div>

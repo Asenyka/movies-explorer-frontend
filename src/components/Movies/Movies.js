@@ -13,7 +13,7 @@ export default function Movies({
   tipText,
   onCardSave,
   onCardDelete,
-  isSearching
+  isSearching,
 }) {
   const [cardsToShow, setCardsToShow] = useState([]);
   const [cardsTotal, setCardsTotal] = useState([]);
@@ -22,22 +22,22 @@ export default function Movies({
   const cardNumber = windowWidth < 480 ? 5 : windowWidth < 1280 ? 8 : 12;
   const additionalCardNumber = windowWidth < 1280 ? 2 : 3;
   const searchedCards = localStorage.getItem("searchedCards");
-  
 
   useEffect(() => {
-    if (cards.length!==0) {
-      currentCardNumber<cardNumber?
-      setCardsToShow(cards.slice(0, cardNumber)):
-      setCardsToShow(cards.slice(0, currentCardNumber));
-     setCardsTotal(cards);
+    if (cards.length !== 0) {
+      currentCardNumber < cardNumber
+        ? setCardsToShow(cards.slice(0, cardNumber))
+        : setCardsToShow(cards.slice(0, currentCardNumber));
+      setCardsTotal(cards);
     } else {
       const previousCards = JSON.parse(searchedCards);
-      if (previousCards){
-        currentCardNumber<cardNumber?
-      setCardsToShow(previousCards.slice(0, cardNumber)):
-      setCardsToShow(previousCards.slice(0, currentCardNumber));
-     setCardsTotal(previousCards);
-    }}
+      if (previousCards) {
+        currentCardNumber < cardNumber
+          ? setCardsToShow(previousCards.slice(0, cardNumber))
+          : setCardsToShow(previousCards.slice(0, currentCardNumber));
+        setCardsTotal(previousCards);
+      }
+    }
   }, [cards, cardNumber, searchedCards]);
 
   function moreOnClick() {
@@ -46,21 +46,32 @@ export default function Movies({
     setCurrentCardNumber(newCardNumber);
   }
 
-  if(isSearching){
+  if (isSearching) {
     return (
       <section className="movies">
-        <PageWithMovies onSearchSubmit={onSearchSubmit} onFilterClick={onFilterClick}>
-         <Preloader />
+        <PageWithMovies
+          onSearchSubmit={onSearchSubmit}
+          onFilterClick={onFilterClick}
+        >
+          <Preloader />
         </PageWithMovies>
       </section>
     );
   }
 
-  if (cardsToShow.length !==0) {
+  if (cardsToShow.length !== 0) {
     return (
       <section className="movies">
-        <PageWithMovies onSearchSubmit={onSearchSubmit} onFilterClick={onFilterClick}>
-          <MoviesCardList cards={cardsToShow} forSavedMovies={false} onCardSave={onCardSave} onCardDelete={onCardDelete}/>
+        <PageWithMovies
+          onSearchSubmit={onSearchSubmit}
+          onFilterClick={onFilterClick}
+        >
+          <MoviesCardList
+            cards={cardsToShow}
+            forSavedMovies={false}
+            onCardSave={onCardSave}
+            onCardDelete={onCardDelete}
+          />
         </PageWithMovies>
         {cardsToShow.length < cardsTotal.length ? (
           <Button
@@ -77,8 +88,15 @@ export default function Movies({
   } else {
     return (
       <section className="movies">
-        <PageWithMovies onSearchSubmit={onSearchSubmit} onFilterClick={onFilterClick}>
-         {onSearch?<SearchTip tipText={tipText}/>:<SearchTip tipText="Введите запрос для поиска фильма"/>}
+        <PageWithMovies
+          onSearchSubmit={onSearchSubmit}
+          onFilterClick={onFilterClick}
+        >
+          {onSearch ? (
+            <SearchTip tipText={tipText} />
+          ) : (
+            <SearchTip tipText="Введите запрос для поиска фильма" />
+          )}
         </PageWithMovies>
       </section>
     );

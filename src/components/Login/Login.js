@@ -30,7 +30,7 @@ export default function Login(props) {
         isValid={isFormValid}
       >
         <Input
-        disabled={props.isSendingForm===true?true:false}
+          disabled={props.isSendingForm === true ? true : false}
           name="email"
           type="email"
           placeholder="E-mail"
@@ -40,7 +40,7 @@ export default function Login(props) {
           value={values.email || ""}
         />
         <Input
-        disabled={props.isSendingForm===true?true:false}
+          disabled={props.isSendingForm === true ? true : false}
           name="password"
           type="password"
           placeholder="Пароль"
