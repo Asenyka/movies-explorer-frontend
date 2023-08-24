@@ -8,7 +8,7 @@ export default function Navigation(props) {
       <div className="navigation__block">
         <Button
           buttonText={<img src={cross} alt="Пиктограмма крестика" />}
-          modifier="close_navigation"
+          modifier="close"
           onClick={props.onClose}
         />
 

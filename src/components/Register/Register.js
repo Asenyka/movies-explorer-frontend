@@ -1,32 +1,26 @@
-import { useState } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import useFormWithValidation from "../../hooks/useFormWithValidation";
+//import { Link } from "react-router-dom";
 import Form from "../Form/Form";
 import Input from "../Input/Input";
 import PageWithForm from "../PageWithForm/PageWithForm";
 
 export default function Register(props) {
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  const [name, setName] = useState();
-  function handleEmailInputState(e) {
-    setEmail(e.target.value);
-  }
-  function handleNameInputState(e){
-    setName(e.target.value);
-  }
-  function handlePasswordInputState(e) {
-    setPassword(e.target.value);
-  }
+  
+  const {values, handleInputChange, resetForm, errors, isFormValid} = useFormWithValidation();
+  useEffect(()=>{
+    resetForm({});
+  }, [resetForm])
 
-  function handleSubmit(e) {
+    function handleSubmit(e) {
     e.preventDefault();
-    props.onRegister({ email: email, password: password, name: name});
+    props.onRegister({ email: values.email, password: values.password, name: values.name});
   }
   return (
    
     <PageWithForm
       question="Уже зарегистрированы?"
-      linkTo="/register"
+      linkTo="/signin"
       linkText="Войти"
       modifier="register"
     >
@@ -35,30 +29,45 @@ export default function Register(props) {
         onSubmit={handleSubmit}
         buttonText="Зарегистрироваться"
         heading="Добро пожаловать!"
+        isValid={isFormValid} 
       >
         <Input
+        disabled={props.isSendingForm===true?true:false}
           form="register"
           name="name"
           type="text"
           placeholder="Имя"
           label="Имя"
-          onChange={handleNameInputState}
+          value={values.name||""}
+          onChange={handleInputChange}
+          error={errors.name}
+          minLength={2}
+          maxLength={32}
         />
         <Input
+         disabled={props.isSendingForm===true?true:false}
           form="register"
           name="email"
           type="email"
           placeholder="E-mail"
           label="E-mail"
-          onChange={handleEmailInputState}
+          onChange={handleInputChange}
+          value={values.email||""}
+          error={errors.email}
+      
         />
         <Input
+         disabled={props.isSendingForm===true?true:false}
           form="register"
           name="password"
           type="password"
           placeholder="Пароль"
           label="Пароль"
-          onChange={handlePasswordInputState}
+          onChange={handleInputChange}
+          value={values.password||""}
+          error={errors.password}
+          minLength={4}
+        
         />
       </Form>
     </PageWithForm>

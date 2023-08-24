@@ -1,24 +1,19 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useEffect } from "react";
+import useFormWithValidation from "../../hooks/useFormWithValidation";
 import Form from "../Form/Form";
 import Input from "../Input/Input";
 import PageWithForm from "../PageWithForm/PageWithForm";
 
-
 export default function Login(props) {
-  const navigate = useNavigate();
-  const [email, setEmail] = useState();
-  const [password, setPassword] = useState();
-  function handleEmailInputState(e) {
-    setEmail(e.target.value);
-  }
-  function handlePasswordInputState(e) {
-    setPassword(e.target.value);
-  }
+  const { values, handleInputChange, resetForm, errors, isFormValid } =
+    useFormWithValidation();
+  useEffect(() => {
+    resetForm({});
+  }, [resetForm]);
+
   function handleSubmit(e) {
     e.preventDefault();
-    props.onLogin({ password: password, email: email });
-    navigate("/movies", { replace: true });
+    props.onLogin({ password: values.password, email: values.email });
   }
   return (
     <PageWithForm
@@ -32,19 +27,28 @@ export default function Login(props) {
         onSubmit={handleSubmit}
         buttonText="Войти"
         heading="Рады видеть!"
+        isValid={isFormValid}
       >
-        <Input n
-        ame="email" 
-        type="email" 
-        placeholder="E-mail" 
-        label="E-mail"
-         onChange={handleEmailInputState}/>
         <Input
+          disabled={props.isSendingForm === true ? true : false}
+          name="email"
+          type="email"
+          placeholder="E-mail"
+          label="E-mail"
+          onChange={handleInputChange}
+          error={errors.email}
+          value={values.email || ""}
+        />
+        <Input
+          disabled={props.isSendingForm === true ? true : false}
           name="password"
           type="password"
           placeholder="Пароль"
           label="Пароль"
-          onChange={handlePasswordInputState}
+          onChange={handleInputChange}
+          error={errors.password}
+          minLength={4}
+          value={values.password || ""}
         />
       </Form>
     </PageWithForm>

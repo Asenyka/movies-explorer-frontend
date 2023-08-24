@@ -14,7 +14,13 @@
 .button:hover {
   opacity: 0.8;
 }
-
+.button_close{
+  width: 22px;
+  height: 22px;
+  position: absolute;
+  top: 13.44px;
+  right: 13.44px;
+}
 .button_header-nav {
   width: 40px;
   height: 43px;
@@ -35,7 +41,7 @@
   min-height: 26px;
   text-align: center;
 }
-.button_close_navigation {
+.button_close{
   width: 22px;
   height: 22px;
   position: absolute;
@@ -86,9 +92,10 @@
   line-height: normal;
   margin: 157px 0 14px;
 }
-.button_form_inactive {
+.button_form_hidden {
   display: none;
 }
+
 .button_form_profile {
   border-radius: 3px;
   color: #fff;
@@ -98,9 +105,16 @@
   line-height: normal;
   margin-top: 379px;
   min-height: 45px;
-  max-width: 410px;
+  width: 410px;
   align-self: center;
 }
+.button_form_inactive {
+  opacity:0.5;
+}
+.button_form_inactive:hover{
+  opacity:0.5;
+}
+
 .button_form_login {
   margin-top: 309px;
 }
@@ -132,7 +146,7 @@
     margin-bottom: 80px;
   }
 
-  .button_close_navigation {
+  .button_close {
     top: 22.44px;
     right: 22.44px;
   }

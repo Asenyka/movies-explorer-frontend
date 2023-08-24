@@ -1,7 +1,7 @@
 import logo from "../../images/logo.svg";
 import Button from "../Button/Button";
 import navpic from "../../images/navpic.svg";
-import { Link } from "react-router-dom";
+import { Link, NavLink } from "react-router-dom";
 
 export default function Header(props) {
   return (
@@ -23,19 +23,19 @@ export default function Header(props) {
       >
         <ul className="header__nav-links">
           <li className="header__nav-link">
-            <Link className="link link_header-nav" to="/movies">
+            <NavLink className="link link_header-nav" to="/movies">
               Фильмы
-            </Link>
+            </NavLink>
           </li>
           <li className="header__nav-link">
-            <Link className="link link_header-nav" to="/saved-movies">
+            <NavLink className="link link_header-nav" to="/saved-movies">
               Сохранённые фильмы
-            </Link>
+            </NavLink>
           </li>
         </ul>
-        <Link className="link link_to-profile" to="/profile">
+        <NavLink className="link link_to-profile" to="/profile">
           Аккаунт
-        </Link>
+        </NavLink>
       </div>
       <div
         className={`header__auth-links-block ${
